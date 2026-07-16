@@ -1,0 +1,3262 @@
+local v0=(getgenv and getgenv()) or _G
+pcall(function()if getscriptclosure then v0['Leme GUI LoaderFn']=getscriptclosure(script)end end)
+pcall(function()local v00=v0['Leme GUI Loaded']if v00 and v00.Destroy then v00.Destroy()end end)
+local v00={}
+v0['Leme GUI Loaded']=v00
+local v00a={}
+
+local v1,v2,v3,v4,v5,v6=game:service'Players',game:service'UserInputService',game:service'TweenService',game:service'RunService',{},false
+local v7=v1.LocalPlayer
+local v8=(function()local v9 pcall(function()v9=gethui()end)if not v9 then pcall(function()v9=get_hidden_gui()end)end if not v9 then v9=game:service'CoreGui' end return v9 end)()
+local v10,v11
+local v720=nil
+local v721=nil
+local v722=nil
+local v723=nil
+local v724=nil
+local v73,v74=nil,nil
+local function v702(v75)
+	if not v75 then return nil end
+	local v76,v77,v78=nil,nil,nil
+	for _,v79 in ipairs(v75:GetChildren()) do
+		local v80=v79.Name
+		if v80=='HumanoidRootPart' then v76=v79
+		elseif v80=='Torso' then v77=v79
+		elseif v80=='Head' then v78=v79 end
+	end
+	return v76 or v77 or v78
+end
+local function v703()
+	local v75=workspace.CurrentCamera
+	if not v75 then return nil end
+	local v76=v75.CameraSubject
+	if not v76 then return nil end
+	if v76:IsA('BasePart') then return v76 end
+	if v76:IsA('Humanoid') then return v702(v76.Parent) end
+	return nil
+end
+local v706=false
+local function v707()
+	v706=not v706
+	return Vector3.new(0,v706 and .1 or -.1,0)
+end
+local function v12()
+	if v6 then return end
+	v6=true
+	for v13=1,#v00a do pcall(function()v00a[v13](false)end) end
+	pcall(function()v4:UnbindFromRenderStep('v2')end)pcall(function()v4:UnbindFromRenderStep('v3')end)pcall(function()v4:UnbindFromRenderStep('v4')end)pcall(function()v4:UnbindFromRenderStep('v5')end)pcall(function()v4:UnbindFromRenderStep('v6')end)pcall(function()v4:UnbindFromRenderStep('v7')end)pcall(function()v4:UnbindFromRenderStep('v8')end)
+	for v13=1,#v5 do pcall(function()v5[v13]:Disconnect()end) end
+	pcall(function()if v10 then v10:Destroy()end end)
+	pcall(function()if v11 then v11:Destroy()end end)
+	pcall(function()script:Destroy()end)
+end
+v00.Destroy=v12
+
+local function CreateStroke(v12)
+	local v13=Instance.new('UIStroke',v12)
+	v13.ApplyStrokeMode=Enum.ApplyStrokeMode.Border
+	v13.Color=Color3.new(1,1,1)
+	return v13
+end
+
+local function CreateCorner(v14,v15)
+	local v16=Instance.new('UICorner',v14)
+	v16.CornerRadius=UDim.new(0,v15)
+	return v16
+end
+
+local v13,v14,v15,v16,v24,v25,v26,v27='English','Leme GUI v2.1 Config.txt',{}, {}, {},nil,{},''
+local function v19(v17)
+	if v13~='日本語' then return v17 end
+	return v15[v17] or v17
+end
+local function v20(v17,v18)
+	v16[#v16+1]=function()if v17 and v17.Parent then v18(v17) end end
+end
+local function v21()for v17=1,#v16 do pcall(v16[v17]) end end
+local function v22()
+	if not readfile then return end
+	local v17
+	pcall(function()v17=readfile(v14)end)
+	if type(v17)~='string' then return end
+	for v18 in pairs(v24) do v24[v18]=nil end
+	v25=nil
+	local v18=nil
+	for v19a in v17:gmatch('[^\r\n]+') do
+		local v20a=v19a:match('^%[Config:(.+)%]$')
+		if v20a then
+			v20a=v20a:match('^%s*(.-)%s*$')
+			v18=v20a
+			v24[v18]=v24[v18] or {}
+		else
+			local v21a,v22a=v19a:match('^([^=]+)=(.*)$')
+			if v21a then
+				v21a=v21a:match('^%s*(.-)%s*$')
+				v22a=(v22a or ''):match('^%s*(.-)%s*$')
+				if v18 then
+					v24[v18][v21a]=v22a
+				else
+					if v21a=='Language' then v13=v22a elseif v21a=='AutoLoad' then v25=v22a end
+				end
+			end
+		end
+	end
+	if v13~='English' and v13~='日本語' then v13='English' end
+	if v25 and (not v24[v25]) then v25=nil end
+end
+local function v23()
+	if not writefile then return end
+	pcall(function()
+		local v17='Language='..v13..'\n'
+		if v25 and v25~='' then v17=v17..'AutoLoad='..v25..'\n' end
+		for v18,v19a in pairs(v24) do
+			v17=v17..'\n[Config:'..tostring(v18)..']\n'
+			for v20a,v21a in pairs(v19a) do
+				v17=v17..tostring(v20a)..'='..tostring(v21a)..'\n'
+			end
+		end
+		writefile(v14,v17)
+	end)
+end
+local function v28(v17,v18,v19a,v20a)
+	if v27=='' or v27=='Config' then return end
+	if v27=='Script' and v18=='Language' then return end
+	v26[#v26+1]={v27..'.'..v18,v17,v19a,v20a}
+end
+local v28a=v28
+local function v29(v17)
+	local v18=v24[v17]
+	if not v18 then return end
+	for v19a=1,#v26 do
+		local v20a=v26[v19a]
+		local v21a=v18[v20a[1]]
+		if v21a~=nil then
+			local v22a=v20a[2]
+			if v22a=='Toggle' then
+				pcall(function()v20a[4](v21a=='1')end)
+			elseif v22a=='Input' then
+				pcall(function()v20a[4](tostring(v21a))end)
+			elseif v22a=='3Input' then
+				pcall(function()v20a[4](tostring(v21a))end)
+			elseif v22a=='Select' then
+				pcall(function()v20a[4](tostring(v21a))end)
+			end
+		end
+	end
+end
+local function v30()
+	local v17={}
+	for v18=1,#v26 do
+		local v19a=v26[v18]
+		local v20a=v19a[2]
+		if v20a=='Toggle' then
+			local v21a=false
+			pcall(function()v21a=v19a[3]()end)
+			v17[v19a[1]]=v21a and '1' or '0'
+		elseif v20a=='Input' or v20a=='3Input' or v20a=='Select' then
+			local v21a=''
+			pcall(function()v21a=v19a[3]()end)
+			v17[v19a[1]]=tostring(v21a)
+		end
+	end
+	return v17
+end
+v15={
+	['Fly']='飛行',['Hover']='ホバー',['Sit Fly']='座って飛ぶ',['Speed']='速度',['Quick Fly']='クイック飛行',['Trigger']='トリガー',
+	['Fling']='吹き飛ばす',['Touch Fling']='触ったら吹き飛ばす',['Fling All']='全員吹き飛ばす',['Safe Method']='安全ロック',['Whitelist Friend']='フレンドは対象外',['Target']='ターゲット',
+	['Anti']='耐性',['Anti Void']='奈落耐性',['Anti AFK']='放置耐性',['Anti Fling v2']='吹っ飛び耐性v2',['Anti Fling v1']='吹っ飛び耐性v1',
+	['Humanoid']='キャラクター',['Reset']='リセット',['Loop Reset']='ループリセット',['Quick Reset']='クイックリセット',['NoClip']='すり抜け',['InfJump']='無限ジャンプ',['Anchor']='固定',
+	['Other']='その他',['Rejoin']='入り直す',['Chat']='チャット',['Instant Prompt']='即時プロンプト',['Fire All Touch']='すべてのタッチを触る',['No Fog']='霧を消す',['Status']='ステータス',
+	['WalkSpeed']='歩行速度',['Value']='数値',['Set']='設定',['Loop Set']='ループ設定',['Current']='現在値',['TP Walk']='TP歩行',
+	['JumpPower']='ジャンプ力',['Gravity']='重力',['FOV']='視野',['MaxZoom']='最大ズーム',['MinZoom']='最小ズーム',['No MaxZoom']='最大ズームを消す',['No MinZoom']='最小ズームを消す',
+	['Desync']='同期ズレ',['Desync Pos']='座標で同期ズレ',['Pos']='座標',['Set Pos']='座標を設定',['Desync Rot']='回転を同期ズレ',['Rot']='回転',['Desync Dif']='差分で同期ズレ',['Dif']='差分',['Desync Vel']='速度を同期ズレ',['Vel']='速度',['Desync RVel']='角速度を同期ズレ',['RVel']='角速度',
+	['Teleport']='テレポート',
+	['Script']='スクリプト',['Load IY']='IYを実行',['Load RSpy']='RSpyを実行',['Load Dex']='Dexを実行',['Load ShiftLock']='シフトロックを実行',['Unload']='LemeGUIを消す',['Language']='言語',
+	['Config']='設定',['Name']='名前',['Create Config']='設定を作成',['Load Config']='設定を反映',['OverWrite Config']='設定を上書き',['Delete Config']='設定を削除',['Set AutoLoad']='オートロードに設定',
+	['ESP']='ESP',['Mini ESP']='ミニESP',['HighLight']='ハイライト',['Spectate']='観戦',['Shader']='シェーダー',['Mini Shader']='ミニシェーダー',
+	['ON']='オン',['OFF']='オフ',['NONE']='なし'
+}
+local v710,v711,v712,v713,v714,v715=false,0,0,nil,'',nil
+v713=function(v716,v717)
+	if v716>v712 then v712=v716 end
+	if v717~=nil then v714=tostring(v717) end
+	if v715 then v715.Text=v714 end
+end
+
+local v17={}
+local function v18(v19)
+	local v20=v17[v19] or 0
+	v20=v20+1
+	v17[v19]=v20
+	return v20
+end
+
+local function CreateButton(v21,v22,v23)
+	local v24=Instance.new('TextButton',v21)
+	v24.LayoutOrder=v18(v21)
+	v24.Size=UDim2.new(1,0,0,26)
+	v24.BackgroundColor3=Color3.new(.2,.2,.2)
+	v24.AutoButtonColor=false
+	v24.Font=Enum.Font.Code
+	v24.TextColor3=Color3.new(1,1,1)
+	v24.TextSize=15
+	v24.Text=v19(v22)
+	v20(v24,function(v25)v25.Text=v19(v22)end)
+	CreateCorner(v24,5)
+	CreateStroke(v24)
+	if v23 then v24.MouseButton1Click:Connect(v23) end
+	return v24
+end
+
+local function CreateToggle(v25,v26,v27,v28,v29)
+	local v30=Instance.new('TextButton',v25)
+	v30.LayoutOrder=v18(v25)
+	v30.Size=UDim2.new(1,0,0,26)
+	v30.BackgroundColor3=Color3.new(.2,.2,.2)
+	v30.AutoButtonColor=false
+	v30.Font=Enum.Font.Code
+	v30.TextColor3=Color3.new(1,1,1)
+	v30.TextSize=15
+	CreateCorner(v30,5)
+	CreateStroke(v30)
+	local v31=false
+	local v32
+	local function v33(v34,v35)
+		if v35 then
+			v30.Text=v19(v26)..(v31 and ' ['..v19('ON')..']' or ' ['..v19('OFF')..']')
+			return
+		end
+		local v36=v31
+		if v34==nil then v31=not v31 else v31=v34 end
+		if (not v36) and v31 and v29 then
+			for v37=1,#v29 do
+				if v29[v37] and v29[v37][2]~=v33 then v29[v37][2](false) end
+			end
+		end
+		v30.Text=v19(v26)..(v31 and ' ['..v19('ON')..']' or ' ['..v19('OFF')..']')
+		if v28 then v28(v31) end
+		if v32 then v32:Disconnect()v32=nil end
+		if v31 and (not v74) then
+	local v37=v7.Character
+	if v37 then v74=v702(v37) end
+	if not v74 then v74=v703() end
+end
+		if v31 and v27 then v32=v4.Heartbeat:Connect(v27) end
+	end
+	v30.MouseButton1Click:Connect(function()v33()end)
+	v30.Text=v19(v26)..' ['..v19('OFF')..']'
+	if v29 then v29[#v29+1]={v30,v33} end
+	v20(v30,function()v33(nil,true)end)
+	v28a('Toggle',v26,function()return v31 end,v33)
+v00a[#v00a+1]=v33
+	return v30,v33,function()return v31 end
+end
+
+local function CreateInput(v37,v38,v39,v40,v41)
+	local v42=Instance.new('Frame',v37)
+	v42.LayoutOrder=v18(v37)
+	v42.Size=UDim2.new(1,0,0,26)
+	v42.BackgroundTransparency=1
+	local v43=Instance.new('TextLabel',v42)
+	v43.Size=UDim2.new(0,0,1,0)
+	v43.AutomaticSize=Enum.AutomaticSize.X
+	v43.BackgroundTransparency=1
+	v43.Font=Enum.Font.Code
+	v43.TextColor3=Color3.new(1,1,1)
+	v43.TextSize=15
+	v43.Text=v19(v38)..':'
+	v43.TextXAlignment=Enum.TextXAlignment.Left
+	v20(v43,function(v44)v44.Text=v19(v38)..':' end)
+	local v44=Instance.new('Frame',v42)
+	v44.BackgroundColor3=Color3.new(.2,.2,.2)
+	CreateCorner(v44,5)
+	CreateStroke(v44)
+	local v45=Instance.new('TextBox',v44)
+	v45.Size=UDim2.new(1,-10,1,0)
+	v45.Position=UDim2.new(0,5,0,0)
+	v45.BackgroundTransparency=1
+	v45.ClearTextOnFocus=false
+	v45.Font=Enum.Font.Code
+	v45.TextColor3=Color3.new(1,1,1)
+	v45.TextSize=15
+	v45.Text=v41 or (v40 and '0,0,0' or '')
+	local function v46()
+		local v47=v43.AbsoluteSize.X+6
+		v44.Position=UDim2.new(0,v47,0,0)
+		v44.Size=UDim2.new(1,-v47,1,0)
+	end
+	v43:GetPropertyChangedSignal('AbsoluteSize'):Connect(v46)
+	task.defer(v46)
+	local function v48(v49)
+		v45.Text=tostring(v49 or '')
+		if not v39 then return end
+		if v40 then
+			local v50,v51,v52=v45.Text:match('^%s*([%+%-]?%d*%.?%d+)%s*,%s*([%+%-]?%d*%.?%d+)%s*,%s*([%+%-]?%d*%.?%d+)%s*$')
+			if v50 then v39(tonumber(v50),tonumber(v51),tonumber(v52)) end
+		else
+			v39(v45.Text)
+		end
+	end
+	v45.FocusLost:Connect(function()
+		if not v39 then return end
+		if v40 then
+			local v49,v50,v51=v45.Text:match('^%s*([%+%-]?%d*%.?%d+)%s*,%s*([%+%-]?%d*%.?%d+)%s*,%s*([%+%-]?%d*%.?%d+)%s*$')
+			if v49 then v39(tonumber(v49),tonumber(v50),tonumber(v51)) end
+		else
+			v39(v45.Text)
+		end
+	end)
+	v28('Input',v38,function()return v45.Text end,v48)
+	return v42,v45
+end
+
+local function Create3Input(v37,v38,v39,v41,v42,v43)
+	local v44=Instance.new('Frame',v37)
+	v44.LayoutOrder=v18(v37)
+	v44.Size=UDim2.new(1,0,0,26)
+	v44.BackgroundTransparency=1
+	local v45=Instance.new('TextLabel',v44)
+	v45.Size=UDim2.new(0,0,1,0)
+	v45.AutomaticSize=Enum.AutomaticSize.X
+	v45.BackgroundTransparency=1
+	v45.Font=Enum.Font.Code
+	v45.TextColor3=Color3.new(1,1,1)
+	v45.TextSize=15
+	v45.Text=v19(v38)..':'
+	v45.TextXAlignment=Enum.TextXAlignment.Left
+	v20(v45,function(v46)v46.Text=v19(v38)..':' end)
+	local v46=Instance.new('Frame',v44)
+	v46.BackgroundColor3=Color3.new(.2,.2,.2)
+	CreateCorner(v46,5)
+	CreateStroke(v46)
+	local v47,v48,v49=Instance.new('TextBox',v46),Instance.new('TextBox',v46),Instance.new('TextBox',v46)
+	v47.BackgroundTransparency=1 v48.BackgroundTransparency=1 v49.BackgroundTransparency=1
+	v47.ClearTextOnFocus=false v48.ClearTextOnFocus=false v49.ClearTextOnFocus=false
+	v47.Font=Enum.Font.Code v48.Font=Enum.Font.Code v49.Font=Enum.Font.Code
+	v47.TextColor3=Color3.new(1,1,1) v48.TextColor3=Color3.new(1,1,1) v49.TextColor3=Color3.new(1,1,1)
+	v47.TextSize=15 v48.TextSize=15 v49.TextSize=15
+	v47.Text=v41 or '0' v48.Text=v42 or '0' v49.Text=v43 or '0'
+	local function v50()
+		local v51=v45.AbsoluteSize.X+6
+		v46.Position=UDim2.new(0,v51,0,0)
+		v46.Size=UDim2.new(1,-v51,1,0)
+		local v52=v46.AbsoluteSize.X
+		local v53=(v52-12)/3
+		v47.Size=UDim2.new(0,v53,1,0)
+		v48.Size=UDim2.new(0,v53,1,0)
+		v49.Size=UDim2.new(0,v53,1,0)
+		v47.Position=UDim2.new(0,4,0,0)
+		v48.Position=UDim2.new(0,6+v53,0,0)
+		v49.Position=UDim2.new(0,8+v53*2,0,0)
+	end
+	v45:GetPropertyChangedSignal('AbsoluteSize'):Connect(v50)
+	v46:GetPropertyChangedSignal('AbsoluteSize'):Connect(v50)
+	task.defer(v50)
+	local function v54()
+		if not v39 then return end
+		local v55,v56,v57=tonumber(v47.Text),tonumber(v48.Text),tonumber(v49.Text)
+		if v55 and v56 and v57 then v39(v55,v56,v57) end
+	end
+	v47.FocusLost:Connect(v54)
+	v48.FocusLost:Connect(v54)
+	v49.FocusLost:Connect(v54)
+	local function v58(v59)
+		local v60,v61,v62=v59:match('^%s*([^,]+)%s*,%s*([^,]+)%s*,%s*([^,]+)%s*$')
+		if not v60 then
+			v60,v61,v62=v59:match('^%s*([%+%-]?%d*%.?%d+)%s+([%+%-]?%d*%.?%d+)%s+([%+%-]?%d*%.?%d+)%s*$')
+		end
+		if v60 then
+			v47.Text=tostring(v60)
+			v48.Text=tostring(v61)
+			v49.Text=tostring(v62)
+			v54()
+		end
+	end
+	v28('3Input',v38,function()return tostring(v47.Text)..','..tostring(v48.Text)..','..tostring(v49.Text) end,v58)
+	return v44,v47,v48,v49
+end
+
+local function CreateDisplay(v51,v52)
+	local v53=Instance.new('TextLabel',v51)
+	v53.LayoutOrder=v18(v51)
+	v53.Size=UDim2.new(1,0,0,26)
+	v53.BackgroundTransparency=1
+	v53.Font=Enum.Font.Code
+	v53.TextColor3=Color3.new(1,1,1)
+	v53.TextSize=15
+	v53.Text=v52
+	v53.TextXAlignment=Enum.TextXAlignment.Left
+	return v53
+end
+
+local function CreateKeybind(v54,v55,v56)
+	local v57=CreateButton(v54,v55..': '..v19('NONE'))
+	local v58=Enum.KeyCode.Unknown
+	local v59=false
+	local function v60()
+		v57.Text=v19(v55)..': '..(v58~=Enum.KeyCode.Unknown and v58.Name or v19('NONE'))
+	end
+	v57.MouseButton1Click:Connect(function()
+		v59=true
+		v57.Text=v19(v55)..': ...'
+	end)
+	v5[#v5+1]=v2.InputBegan:Connect(function(v61,v62)
+	if v6 then return end
+	if v2:GetFocusedTextBox() then return end
+		if v59 and v61.KeyCode~=Enum.KeyCode.Unknown then
+			v59=false
+			v58=v61.KeyCode
+			v60()
+			return
+		end
+		if v58~=Enum.KeyCode.Unknown and v61.KeyCode==v58 then
+			if v56 then v56(v58) end
+		end
+	end)
+	v20(v57,function()v60()end)
+	v60()
+	return v57
+end
+
+local function CreateSelect(v61,v62,v63,v64,v65)
+	local v66,v67=CreateButton(v61,v62..': '..tostring(v63)),false
+	local v68
+	local function v69()
+		if v68 then pcall(function()v68:Destroy()end)v68=nil end
+		v67=false
+	end
+	local function v70()
+		if v67 then return end
+		v67=true
+		v68=Instance.new('Frame',v11)
+		v68.Size=UDim2.new(1,0,1,0)
+		v68.BackgroundTransparency=1
+		v68.ZIndex=2147483647
+		local v71=Instance.new('TextButton',v68)
+		v71.Size=UDim2.new(1,0,1,0)
+		v71.BackgroundTransparency=1
+		v71.Text=''
+		v71.AutoButtonColor=false
+		v71.ZIndex=2147483647
+		local v72=Instance.new('Frame',v68)
+		v72.Size=UDim2.fromOffset(360,240)
+		v72.Position=UDim2.new(.5,0,.5,0)
+		v72.AnchorPoint=Vector2.new(.5,.5)
+		v72.BackgroundColor3=Color3.new(.15,.15,.15)
+		v72.BorderSizePixel=0
+		v72.ZIndex=2147483647
+		CreateCorner(v72,10)
+		CreateStroke(v72)
+		local v73=Instance.new('TextButton',v72)
+		v73.Size=UDim2.fromOffset(26,26)
+		v73.Position=UDim2.new(1,-30,0,4)
+		v73.BackgroundColor3=Color3.new(.2,.2,.2)
+		v73.AutoButtonColor=false
+		v73.Font=Enum.Font.Code
+		v73.TextColor3=Color3.new(1,1,1)
+		v73.TextSize=15
+		v73.Text='X'
+		v73.ZIndex=2147483647
+		CreateCorner(v73,5)
+		CreateStroke(v73)
+		local v74=Instance.new('TextLabel',v72)
+		v74.Size=UDim2.new(1,-40,0,26)
+		v74.Position=UDim2.new(0,10,0,4)
+		v74.BackgroundTransparency=1
+		v74.Font=Enum.Font.Code
+		v74.TextColor3=Color3.new(1,1,1)
+		v74.TextSize=22
+		v74.Text=v19(v62)
+		v74.TextXAlignment=Enum.TextXAlignment.Left
+		v74.ZIndex=2147483647
+		local v75=Instance.new('ScrollingFrame',v72)
+		v75.Size=UDim2.new(1,-20,1,-44)
+		v75.Position=UDim2.new(0,10,0,36)
+		local v80=Instance.new('UIPadding',v75)
+		v80.PaddingLeft=UDim.new(0,1)
+		v80.PaddingRight=UDim.new(0,1)
+		v80.PaddingTop=UDim.new(0,1)
+		v80.PaddingBottom=UDim.new(0,1)
+		v75.BackgroundTransparency=1
+		v75.BorderSizePixel=0
+		v75.ScrollBarThickness=0
+		v75.AutomaticCanvasSize=Enum.AutomaticSize.Y
+		v75.ZIndex=2147483647
+		local v76=Instance.new('UIListLayout',v75)
+		v76.Padding=UDim.new(0,8)
+		v76.SortOrder=Enum.SortOrder.LayoutOrder
+		v73.MouseButton1Click:Connect(v69)
+		v71.MouseButton1Click:Connect(v69)
+		for v77=1,#v64 do
+			local v78=v64[v77]
+			local v79=Instance.new('TextButton',v75)
+			v79.Size=UDim2.new(1,-2,0,26)
+			v79.Position=UDim2.new(0,1,0,0)
+			v79.BackgroundColor3=Color3.new(.2,.2,.2)
+			v79.AutoButtonColor=false
+			v79.Font=Enum.Font.Code
+			v79.TextColor3=Color3.new(1,1,1)
+			v79.TextSize=15
+			v79.Text=tostring(v78)
+			v79.ZIndex=2147483647
+			CreateCorner(v79,5)
+			CreateStroke(v79)
+			v79.MouseButton1Click:Connect(function()
+				v63=v78
+				v66.Text=v19(v62)..': '..tostring(v63)
+				if v65 then v65(v63) end
+				v23()
+				v21()
+				v69()
+			end)
+		end
+	end
+	v66.MouseButton1Click:Connect(v70)
+	local function v71(v72)
+		v63=v72
+		if v65 then v65(v63) end
+		v66.Text=v19(v62)..': '..tostring(v63)
+		v23()
+		v21()
+	end
+	v20(v66,function()v66.Text=v19(v62)..': '..tostring(v63)end)
+	v28('Select',v62,function()return tostring(v63) end,v71)
+	return v66,function()return v63 end,v71
+end
+
+local function CreateGroup(v62,v63)
+	v27=v63
+	local v64=Instance.new('Frame',v62)
+	v64.Size=UDim2.new(1,0,0,0)
+	v64.AutomaticSize=Enum.AutomaticSize.Y
+	v64.BackgroundTransparency=1
+	local v65=Instance.new('UIListLayout',v64)
+	v65.Padding=UDim.new(0,10)
+	v65.SortOrder=Enum.SortOrder.LayoutOrder
+	local v66=Instance.new('TextLabel',v64)
+	v66.Size=UDim2.new(1,0,0,26)
+	v66.BackgroundTransparency=1
+	v66.Font=Enum.Font.Code
+	v66.TextColor3=Color3.new(1,1,1)
+	v66.TextSize=22
+	v66.Text=v19(v63)
+	v66.TextXAlignment=Enum.TextXAlignment.Left
+	v20(v66,function(v67)v67.Text=v19(v63)end)
+	local v67=Instance.new('Frame',v64)
+	v67.Size=UDim2.new(1,0,0,0)
+	v67.AutomaticSize=Enum.AutomaticSize.Y
+	v67.BackgroundTransparency=1
+	local v68=Instance.new('UIListLayout',v67)
+	v68.FillDirection=Enum.FillDirection.Horizontal
+	v68.Padding=UDim.new(0,12)
+	v68.SortOrder=Enum.SortOrder.LayoutOrder
+	local v69=Instance.new('Frame',v67)
+	v69.LayoutOrder=0
+	v69.Size=UDim2.new(.5,-6,0,0)
+	v69.AutomaticSize=Enum.AutomaticSize.Y
+	v69.BackgroundTransparency=1
+	local v70=Instance.new('UIListLayout',v69)
+	v70.Padding=UDim.new(0,8)
+	v70.SortOrder=Enum.SortOrder.LayoutOrder
+	local v71=Instance.new('Frame',v67)
+	v71.LayoutOrder=1
+	v71.Size=UDim2.new(.5,-6,0,0)
+	v71.AutomaticSize=Enum.AutomaticSize.Y
+	v71.BackgroundTransparency=1
+	local v72=Instance.new('UIListLayout',v71)
+	v72.Padding=UDim.new(0,8)
+	v72.SortOrder=Enum.SortOrder.LayoutOrder
+	return v69,v71
+end
+
+local function v75(v76)
+	v73,v74=nil,nil
+	for _,v77 in ipairs(v76:GetChildren()) do
+		if v77:IsA('Humanoid') then v73=v77 end
+	end
+	v74=v702(v76)
+	v76.ChildAdded:Connect(function(v78)
+		if v78:IsA('Humanoid') then v73=v78 end
+		local v79=v78.Name
+		if v79=='HumanoidRootPart' or v79=='Torso' or v79=='Head' then v74=v702(v76) end
+	end)
+	v76.ChildRemoved:Connect(function(v78)
+		local v79=v78.Name
+		if v79=='HumanoidRootPart' or v79=='Torso' or v79=='Head' then v74=v702(v76) end
+	end)
+end
+if v7.Character then v75(v7.Character) end
+v5[#v5+1]=v7.CharacterAdded:Connect(v75)
+
+local v78,v79,v80,v81,v82,v83=false,false,false,false,false,false
+v5[#v5+1]=v2.InputBegan:Connect(function(v84,v85)
+	if v6 then return end
+	if v2:GetFocusedTextBox() then return end
+	local v86=v84.KeyCode
+	if v86==Enum.KeyCode.W then v80=true
+	elseif v86==Enum.KeyCode.A then v81=true
+	elseif v86==Enum.KeyCode.S then v82=true
+	elseif v86==Enum.KeyCode.D then v83=true
+	elseif v86==Enum.KeyCode.Q then v78=true
+	elseif v86==Enum.KeyCode.E then v79=true
+	end
+end)
+
+v5[#v5+1]=v2.InputEnded:Connect(function(v88,v89)
+	if v6 then return end
+	if v2:GetFocusedTextBox() then return end
+	local v90=v88.KeyCode
+	if v90==Enum.KeyCode.W then v80=false
+	elseif v90==Enum.KeyCode.A then v81=false
+	elseif v90==Enum.KeyCode.S then v82=false
+	elseif v90==Enum.KeyCode.D then v83=false
+	elseif v90==Enum.KeyCode.Q then v78=false
+	elseif v90==Enum.KeyCode.E then v79=false
+	end
+end)
+
+local function v708()
+	local v91=(v80 and 1 or 0)+(v81 and 1 or 0)+(v82 and 1 or 0)+(v83 and 1 or 0)
+	return v91>1
+end
+
+local function v704(v91)
+	local v92=(v83 and 1 or 0)-(v81 and 1 or 0)
+	local v93=(v80 and 1 or 0)-(v82 and 1 or 0)
+	if v92==0 and v93==0 then return Vector3.new() end
+	local v94=v91.LookVector
+	local v95=Vector3.new(v94.X,0,v94.Z)
+	if v95.Magnitude<.001 then v95=Vector3.new(0,0,-1) else v95=v95.Unit end
+	local v96=v91.RightVector
+	local v97=Vector3.new(v96.X,0,v96.Z)
+	if v97.Magnitude<.001 then v97=Vector3.new(v95.Z,0,-v95.X) else v97=v97.Unit end
+	return v95*v93+v97*v92
+end
+
+local function v709(v91)
+	local v92=(v83 and 1 or 0)-(v81 and 1 or 0)
+	local v93=(v80 and 1 or 0)-(v82 and 1 or 0)
+	if v92==0 and v93==0 then return Vector3.new() end
+	local v94=v91.LookVector*v93+v91.RightVector*v92
+	if v94.Magnitude>.001 then return v94.Unit end
+	return Vector3.new()
+end
+
+v10=Instance.new('ScreenGui',v8)
+v10.ResetOnSpawn=false
+v10.IgnoreGuiInset=true
+v10.DisplayOrder=2147483647
+local v91=Instance.new('Frame',v10)
+v91.Size=UDim2.new(1,0,1,0)
+v91.BackgroundColor3=Color3.new()
+v91.BackgroundTransparency=1
+v91.Active=false
+local v91a=Instance.new('UIGradient',v91)
+v91a.Rotation=90
+v91a.Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(.5,.35),NumberSequenceKeypoint.new(1,0)})
+local v92=v3:Create(v91,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundTransparency=.55})
+v92:Play()
+v92.Completed:Wait()
+
+local v93=Instance.new('Frame',v10)
+v93.Size=UDim2.fromOffset(60,60)
+v93.Position=UDim2.new(.5,0,0,-40)
+v93.AnchorPoint=Vector2.new(.5,.5)
+v93.BackgroundColor3=Color3.new(.15,.15,.15)
+v93.BackgroundTransparency=1
+v93.Active=false
+CreateCorner(v93,1000)
+local v95=CreateStroke(v93)
+v95.Transparency=1
+
+local v93a=Instance.new('Frame',v93)
+v93a.Size=UDim2.new(1,18,1,18)
+v93a.Position=UDim2.new(.5,0,.5,0)
+v93a.AnchorPoint=Vector2.new(.5,.5)
+v93a.BackgroundTransparency=1
+v93a.Rotation=0
+CreateCorner(v93a,1000)
+local v93b=CreateStroke(v93a)
+v93b.Thickness=2
+v93b.Transparency=1
+
+local v93c=Instance.new('Frame',v93)
+v93c.Size=UDim2.new(1,34,1,34)
+v93c.Position=UDim2.new(.5,0,.5,0)
+v93c.AnchorPoint=Vector2.new(.5,.5)
+v93c.BackgroundTransparency=1
+v93c.Rotation=0
+CreateCorner(v93c,1000)
+local v93d=CreateStroke(v93c)
+v93d.Thickness=1
+v93d.Transparency=1
+
+local v94=Instance.new('TextLabel',v93)
+v94.Size=UDim2.new(1,0,1,0)
+v94.BackgroundTransparency=1
+v94.Font=Enum.Font.Code
+v94.TextColor3=Color3.new(1,1,1)
+v94.TextSize=22
+v94.Text='2.1'
+v94.TextTransparency=1
+
+local v97=Instance.new('TextLabel',v10)
+v97.Size=UDim2.fromOffset(360,60)
+v97.Position=UDim2.new(.5,0,.51,0)
+v97.AnchorPoint=Vector2.new(.5,.5)
+v97.BackgroundTransparency=1
+v97.Font=Enum.Font.Code
+v97.TextColor3=Color3.new(1,1,1)
+v97.TextSize=32
+v97.Text='Leme GUI'
+v97.TextTransparency=1
+v97.Active=false
+
+local v97a=Instance.new('Frame',v10)
+v97a.Size=UDim2.fromOffset(240,2)
+v97a.Position=UDim2.new(.5,0,.56,0)
+local v97e=Instance.new('TextLabel',v10)
+v97e.Size=UDim2.fromOffset(420,18)
+v97e.Position=UDim2.new(.5,0,.56,14)
+v97e.AnchorPoint=Vector2.new(.5,0)
+v97e.BackgroundTransparency=1
+v97e.Font=Enum.Font.Code
+v97e.TextColor3=Color3.new(1,1,1)
+v97e.TextSize=14
+v97e.TextXAlignment=Enum.TextXAlignment.Center
+v97e.Text=''
+v97e.TextTransparency=.15
+v715=v97e
+v97a.AnchorPoint=Vector2.new(.5,.5)
+v97a.BackgroundColor3=Color3.new(1,1,1)
+v97a.BackgroundTransparency=.9
+v97a.BorderSizePixel=0
+v97a.Active=false
+local v97b=Instance.new('Frame',v97a)
+v97b.Size=UDim2.new(0,0,1,0)
+v97b.BackgroundColor3=Color3.new(1,1,1)
+v97b.BorderSizePixel=0
+local v97c=Instance.new('UICorner',v97a)
+v97c.CornerRadius=UDim.new(1,0)
+local v97d=Instance.new('UICorner',v97b)
+v97d.CornerRadius=UDim.new(1,0)
+
+local v96,v96a=v3:Create(v93,TweenInfo.new(.7,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Position=UDim2.new(.5,0,.43,0),BackgroundTransparency=0}),v3:Create(v94,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{TextTransparency=0})
+local v96b=v3:Create(v95,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Transparency=0})
+local v96c=v3:Create(v93b,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Transparency=1})
+local v96d=v3:Create(v93d,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Transparency=1})
+local v98=v3:Create(v97,TweenInfo.new(.7,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{TextTransparency=0})
+
+v96:Play()v96a:Play()v96b:Play()v96c:Play()v96d:Play()
+v96.Completed:Wait()
+v98:Play()
+
+v710=false
+v711=0
+v712=0
+
+local v500
+
+local v99a=true
+local v99b=0
+local v99c=v4.RenderStepped:Connect(function(v99d)
+	if v6 then v99a=false return end
+	if not v99a then return end
+	v99b=v99b+v99d
+	v93a.Rotation=v93a.Rotation+v99d*210
+	v93c.Rotation=v93c.Rotation-v99d*140
+	local v99e=1-math.exp(-v99d*8)
+	v711=v711+(v712-v711)*v99e
+	if v711>1 then v711=1 elseif v711<0 then v711=0 end
+	v97b.Size=UDim2.new(v711,0,1,0)
+	if v715 then v715.Text=v714 end
+	if v710 and math.abs(1-v711)<.001 then v711=1 v97b.Size=UDim2.new(1,0,1,0) v99a=false end
+end)
+
+
+
+v11=Instance.new('ScreenGui',v8)
+v11.ResetOnSpawn=false
+v11.DisplayOrder=2147483647
+v11.IgnoreGuiInset=true
+
+local v103=Instance.new('TextButton',v11)
+v103.Size=UDim2.fromOffset(60,60)
+v103.Position=UDim2.new(.5,0,1,400)
+v103.AnchorPoint=Vector2.new(.5,.5)
+v103.BackgroundColor3=Color3.new(.15,.15,.15)
+v103.AutoButtonColor=false
+v103.Text=''
+CreateCorner(v103,1000)
+CreateStroke(v103)
+
+local v104=Instance.new('Frame',v11)
+v104.Size=UDim2.fromOffset(390,258)
+v104.Position=UDim2.new(.5,0,1,660)
+v104.AnchorPoint=Vector2.new(.5,1)
+v104.BackgroundColor3=Color3.new(.15,.15,.15)
+v104.BorderSizePixel=0
+CreateCorner(v104,10)
+CreateStroke(v104)
+
+local v105=Instance.new('ScrollingFrame',v104)
+v105.Size=UDim2.new(1,0,1,0)
+v105.BackgroundTransparency=1
+v105.BorderSizePixel=0
+v105.ScrollBarThickness=0
+v105.AutomaticCanvasSize=Enum.AutomaticSize.Y
+local v106=Instance.new('UIListLayout',v105)
+v106.Padding=UDim.new(0,16)
+v106.SortOrder=Enum.SortOrder.LayoutOrder
+local v107=Instance.new('UIPadding',v105)
+v107.PaddingLeft=UDim.new(0,12)
+v107.PaddingRight=UDim.new(0,12)
+v107.PaddingTop=UDim.new(0,12)
+v107.PaddingBottom=UDim.new(0,12)
+
+function v500()
+if v713 then v713(.3,'Creating Group.Fly...') end
+local v108={}
+local v109=300
+local v110=nil
+
+local v111,v112=CreateGroup(v105,'Fly')
+local v113=nil
+local v114=nil
+local v127a=nil
+local v130=nil
+local v115=0
+local function v116()
+	v115=v115+1
+	return v115%2==1 and v111 or v112
+end
+
+local v117,v118,v119=CreateToggle(v116(),'Fly',function(v120)
+	if v6 then return end
+	local v121=v74
+	if not v121 or not v121.Parent then return end
+	local v122=workspace.CurrentCamera
+	if not v122 then return end
+	if not v110 then v110=v121.CFrame end
+	local v123=v110.p
+	local v124=v122.CFrame
+	local v125=v73 and v73.MoveDirection or Vector3.new()
+	local v126=Vector3.new()
+	if v708() or v125.Magnitude<=.001 then
+		v126=v126+v709(v124)
+	else
+		local v127=v124:VectorToObjectSpace(v125)
+		v126=v126+v124.LookVector*(-v127.Z)+v124.RightVector*(v127.X)
+	end
+	if v79 then v126=v126+v124.UpVector end
+	if v78 then v126=v126-v124.UpVector end
+	if v126.Magnitude>.001 then v126=v126.Unit end
+	v123=v123+v126*v109*v120
+	v110=CFrame.fromMatrix(v123,v124.RightVector,v124.UpVector)
+	v121.Velocity=v707()
+	v121.RotVelocity=Vector3.new()
+	v121.CFrame=v110
+end,function(v120)
+	if v120 then
+		local v121a=v721 and v721() or nil
+			if v121a then v110=v121a elseif v74 then v110=v74.CFrame else v110=nil end
+	else
+		v110=nil
+	end
+end,v108)
+
+local v128,v129,v132=CreateToggle(v116(),'Hover',function(v131)
+	if v6 then return end
+	local v132a=v74
+	if not v132a or not v132a.Parent then return end
+	local v133a=v113
+	local v134a=v130
+	if not v133a or not v133a.Parent or not v134a or not v134a.Parent then return end
+	local v135a=workspace.CurrentCamera
+	if not v135a then return end
+	if not v114 then v114=v132a.CFrame.p end
+	local v136a=v135a.CFrame
+	local v137a=v136a.LookVector
+	local v138a=Vector3.new(v137a.X,0,v137a.Z)
+	if v138a.Magnitude<.001 then
+		local v139a=v132a.CFrame.LookVector
+		v138a=Vector3.new(v139a.X,0,v139a.Z)
+	end
+	v138a=v138a.Unit
+	local v140a=v136a.RightVector
+	local v141a=Vector3.new(v140a.X,0,v140a.Z)
+	if v141a.Magnitude<.001 then v141a=v138a:Cross(Vector3.new(0,1,0)) end
+	v141a=v141a.Unit
+	local v142a=v73 and v73.MoveDirection or Vector3.new()
+	local v143a=Vector3.new()
+	if v708() or v142a.Magnitude<=.001 then
+		v143a=v143a+v704(v136a)
+	else
+		local v144a=v136a:VectorToObjectSpace(v142a)
+		v143a=v143a+v138a*(-v144a.Z)+v141a*(v144a.X)
+	end
+	local v145a=(v79 and 1 or 0)-(v78 and 1 or 0)
+	if v143a.Magnitude>.001 then v143a=v143a.Unit end
+	v114=v114+(v143a*v109+Vector3.new(0,v145a*v109,0))*v131
+	v133a.Position=v114
+	v134a.CFrame=CFrame.new(v114,v114+v138a)
+end,function(v131)
+	if v131 then
+		local v132b=v721 and v721() or nil
+			local v132a=v74
+		if v132a and v132a.Parent then
+			v114=(v132b or v132a.CFrame).p
+			if v127a then pcall(function()v127a:Destroy()end) v127a=nil end
+			v127a=Instance.new('Attachment',v132a)
+			if v113 then pcall(function()v113:Destroy()end) end
+			if v130 then pcall(function()v130:Destroy()end) end
+			v113=Instance.new('AlignPosition',v132a)
+			v113.Attachment0=v127a
+			v113.Mode=Enum.PositionAlignmentMode.OneAttachment
+			v113.Responsiveness=1/0
+			v113.MaxForce=1/0
+			v113.Position=v114
+			v130=Instance.new('AlignOrientation',v132a)
+			v130.Attachment0=v127a
+			v130.Mode=Enum.OrientationAlignmentMode.OneAttachment
+			v130.Responsiveness=1/0
+			v130.MaxTorque=1/0
+			v130.CFrame=v132a.CFrame
+		end
+	else
+		pcall(function()if v113 then v113:Destroy()end end)
+		pcall(function()if v130 then v130:Destroy()end end)
+		pcall(function()if v127a then v127a:Destroy()end end)
+		v113=nil v114=nil v130=nil v127a=nil
+	end
+end,v108)
+
+local v141,v142,v143=CreateToggle(v116(),'Sit Fly',nil,function(v144)
+	if v144 then
+		if v142 then pcall(function()v142:Disconnect()end)v142=nil end
+		v142=v4.RenderStepped:Connect(function()
+			if v6 then return end
+			if v73 and ((v119 and v119()) or (v132 and v132())) then v73.Sit=true end
+		end)
+	else
+		if v142 then pcall(function()v142:Disconnect()end)v142=nil end
+	end
+end)
+
+CreateInput(v116(),'Speed',function(v145)
+	local v146=tonumber(v145)
+	if v146 then v109=v146 end
+end,nil,'300')
+
+if v2.KeyboardEnabled and v2.MouseEnabled and not v2.TouchEnabled then
+	local v147,v148,v149=CreateToggle(v116(),'Quick Fly')
+	CreateKeybind(v116(),'Trigger',function(v150)
+		if v149 and v149() and v118 and v119 then v118(not v119()) end
+	end)
+end
+
+if v713 then v713(.38,'Creating Group.Fling...') end
+local v151,v152=CreateGroup(v105,'Fling')
+local v153=0
+local function v154()
+	v153=v153+1
+	return v153%2==1 and v151 or v152
+end
+
+local v154a=nil
+local v155,v156=CreateInput(v154(),'Target',function(v157) if v154a then v154a(v157) end end)
+local v157=CreateDisplay(v154(),'Target: NONE')
+
+local v176=nil
+local v262=''
+local v158={}
+local v260,v261=nil,false
+local v159,v160,v161=CreateToggle(v154(),'Fling',nil,function(v162)
+	if v162 and not v176 then v160(false) return end
+	if v162 then
+		local v163=workspace.CurrentCamera
+		if v163 then v260=v163.CameraSubject end
+		v261=true
+		v4:BindToRenderStep('v4',Enum.RenderPriority.Camera.Value+1,function()
+			if v6 then return end
+			local v164=workspace.CurrentCamera
+			if not v164 then return end
+			local v165=v176
+			if not v165 or v165.Parent~=v1 then if v260 and v164.CameraSubject~=v260 then v164.CameraSubject=v260 end return end
+			local v166=v165.Character
+			if not v166 then if v260 and v164.CameraSubject~=v260 then v164.CameraSubject=v260 end return end
+			local v167,v169=nil,nil
+			for _,v168 in ipairs(v166:GetChildren()) do
+				if v168:IsA('Humanoid') then v167=v168 elseif v168.Name=='HumanoidRootPart' then v169=v168 end
+			end
+			if (not v167) or v167.Health<=0 or (not v169) then if v260 and v164.CameraSubject~=v260 then v164.CameraSubject=v260 end return end
+			local v170=v169.Velocity
+			if math.abs(v170.X)+math.abs(v170.Y)+math.abs(v170.Z)>500 then if v260 and v164.CameraSubject~=v260 then v164.CameraSubject=v260 end return end
+			v164.CameraSubject=v167
+		end)
+	else
+		if v261 then v4:UnbindFromRenderStep('v4') v261=false end
+		local v163=workspace.CurrentCamera
+		if v163 and v260 then v163.CameraSubject=v260 end
+		v260=nil
+		if v195 then
+			local v164=v184
+			if v164 and v196 and v197 and v198 then v164.CFrame=v196 v164.Velocity=v197 v164.RotVelocity=v198 end
+			v195=false
+		end
+	end
+end,v158)
+local v164,v165,v166=CreateToggle(v154(),'Touch Fling',nil,function(v162)
+	v263=v162
+	if not v162 then return end
+	task.spawn(function()
+		while v263 and not v6 do
+			v4.Heartbeat:Wait()
+			if not v263 or v6 then break end
+			local v163=v74
+			if not v163 then continue end
+			v264=v163.Velocity
+			v163.Velocity=Vector3.new(0,2147483647,0)
+			v4.RenderStepped:Wait()
+			if not v263 or v6 then break end
+			v163=v74
+			if v163 and v264 then v163.Velocity=v264 end
+		end
+		local v163=v74
+		if v163 and v264 then v163.Velocity=v264 end
+	end)
+end,v158)
+local v167,v168,v169=CreateToggle(v154(),'Fling All',nil,function(v162)
+	if not v162 and v195 then
+		local v163=v184
+		if v163 and v196 and v197 and v198 then v163.CFrame=v196 v163.Velocity=v197 v163.RotVelocity=v198 end
+		v195=false
+	end
+end,v158)
+
+local v170,v171,v172=CreateToggle(v154(),'Safe Method')
+local v179
+local v179a,v179b=nil,0
+v171(true)
+v170.LayoutOrder=2147483646
+local v173,v174,v175=CreateToggle(v154(),'Whitelist Friend',nil,function(v176)
+	if v176 then
+		if v179a then v179a:Disconnect()v179a=nil end
+		v179b=0
+		for _,v177 in ipairs(v1:GetPlayers()) do
+			if v177~=v7 then
+				local v178
+				pcall(function()v178=v7:IsFriendsWith(v177.UserId)end)
+				v179[v177]=v178 or false
+			end
+		end
+	else
+		if v179a then v179a:Disconnect()v179a=nil end
+		for v177 in pairs(v179) do v179[v177]=nil end
+	end
+end)
+v173.LayoutOrder=2147483647
+
+local v177,v178={},{}
+v179={}
+local v180={}
+local v181,v182={},0
+local v183=0
+local v184=nil
+local v185=nil
+local v186=nil
+local v187=nil
+local v188=nil
+local v189=0
+local v263,v264=false,nil
+local v190=0
+local v191=0
+local v192,v193,v194=nil,nil,nil
+local v195=false
+local v196,v197,v198=nil,nil,nil
+local v600,v700=0,nil
+
+local function v199(v200)
+	return v702(v200)
+end
+
+local function v202(v203)
+	v185=v203
+	v184=v199(v203)
+	if v186 then v186:Disconnect()v186=nil end
+	v186=v203.ChildAdded:Connect(function(v204)
+		local v205=v204.Name
+		if v205=='HumanoidRootPart' or v205=='Torso' or v205=='Head' then v184=v199(v203) end
+	end)
+end
+
+local function v205(v206)
+	if v206==v7 then return end
+	if v180[v206] then return end
+	v182=v182+1
+	v181[v182]=v206
+	local v207={}
+	v180[v206]=v207
+	local v208=v206.Character
+	if v208 then
+		v207[1]=v199(v208)
+		if v207[3] then v207[3]:Disconnect() end
+		v207[3]=v208.ChildAdded:Connect(function(v209)
+			local v210=v209.Name
+		if v210=='HumanoidRootPart' or v210=='Torso' or v210=='Head' then v207[1]=v199(v208) end
+		end)
+		if v207[4] then v207[4]:Disconnect() end
+		v207[4]=v208.ChildRemoved:Connect(function(v209)
+			local v210=v209.Name
+		if v210=='HumanoidRootPart' or v210=='Torso' or v210=='Head' then v207[1]=v199(v208) end
+		end)
+	end
+	if v207[2] then v207[2]:Disconnect() end
+	v207[2]=v206.CharacterAdded:Connect(function(v210)
+		v207[1]=v199(v210)
+		if v207[3] then v207[3]:Disconnect() end
+		v207[3]=v210.ChildAdded:Connect(function(v211)
+			local v212=v211.Name
+		if v212=='HumanoidRootPart' or v212=='Torso' or v212=='Head' then v207[1]=v199(v210) end
+		end)
+		if v207[4] then v207[4]:Disconnect() end
+		v207[4]=v210.ChildRemoved:Connect(function(v211)
+			local v212=v211.Name
+		if v212=='HumanoidRootPart' or v212=='Torso' or v212=='Head' then v207[1]=v199(v210) end
+		end)
+	end)
+	if v175 and v175() then
+		local v212
+		pcall(function()v212=v7:IsFriendsWith(v206.UserId)end)
+		v179[v206]=v212 or false
+	end
+end
+
+local function v213(v214)
+	for v215=1,v182 do
+		if v181[v215]==v214 then
+			v181[v215]=v181[v182]
+			v181[v182]=nil
+			v182=v182-1
+			if v190>v182 then v190=v182 end
+			break
+		end
+	end
+	local v216=v180[v214]
+	if v216 then
+		if v216[4] then v216[4]:Disconnect() end
+		if v216[3] then v216[3]:Disconnect() end
+		if v216[2] then v216[2]:Disconnect() end
+		v180[v214]=nil
+	end
+	v177[v214]=nil
+	v178[v214]=nil
+	v179[v214]=nil
+	if v176==v214 then v176=nil end
+end
+
+local function v217(v218)
+	local v219=v180[v218]
+	if not v219 then return end
+	local v220=v219[1]
+	if not v220 then return end
+	if not v220.Parent then v219[1]=nil return end
+	local v221=v220.CFrame.p
+	local v222=v219[5]
+	if v222 and v183>0 then v219[6]=(v221-v222)/v183 end
+	v219[5]=v221
+end
+
+local function v250(v224)
+	local v225=v180[v224]
+	if not v225 then return nil end
+	local v226=v225[1]
+	if not v226 then return nil end
+	if not v226.Parent then v225[1]=nil return nil end
+	local v227=v184
+	if not v227 then return nil end
+	local v228=v227.CFrame.p
+	local v229=v226.CFrame.p
+	local v232=math.random(0,10)/10
+	local v234=v226.Velocity
+	if math.abs(v234.X)+math.abs(v234.Y)+math.abs(v234.Z)<1 then
+		local v235=v225[6]
+		if v235 then v234=v235 end
+	end
+	local v233=v229+v234*v232
+	if v172 and v172() and (v233-v228).Magnitude>800 then return nil end
+	if math.abs(v234.X)+math.abs(v234.Y)+math.abs(v234.Z)>500 then return nil end
+	local v235=math.random()*math.pi*2
+	local v236=math.random()*math.pi*2
+	local v237=math.random()*math.pi*2
+	return CFrame.new(v233)*CFrame.Angles(v235,v236,v237)
+end
+
+local function v238()
+	if v182<1 then return nil end
+	local v239=v184
+	if not v239 then return nil end
+	local v240=v239.CFrame.p
+	local v241=0
+	while v241<v182 do
+		v241=v241+1
+		v190=v190+1
+		if v190>v182 then v190=1 end
+		local v242=v181[v190]
+		if v242 then
+			if v175 and v175() and v179[v242] then
+			else
+				local v243=v250(v242)
+				if v243 then return v243 end
+			end
+		end
+	end
+	return nil
+end
+
+local function v244(v245)
+	local v246=string.lower(v245 or '')
+	v262=v245 or ''
+	if v246=='' then v176=nil return end
+	for v247,v248 in pairs(v177) do
+		if v248 and string.lower(v248)==v246 then v176=v247 return end
+	end
+	for v247,v248 in pairs(v178) do
+		if v248 and string.lower(v248)==v246 then v176=v247 return end
+	end
+	local v247={}
+	for v248,v249 in pairs(v177) do
+		if v249 and string.find(string.lower(v249),v246,1,true) then v247[#v247+1]=v248 end
+	end
+	if #v247==1 then v176=v247[1] return end
+	if #v247==0 then
+		for v248,v249 in pairs(v178) do
+			if v249 and string.find(string.lower(v249),v246,1,true) then v247[#v247+1]=v248 end
+		end
+		if #v247==1 then v176=v247[1] else v176=nil end
+	else
+		v176=nil
+	end
+end
+
+v154a=v244
+v156:GetPropertyChangedSignal('Text'):Connect(function()v244(v156.Text)end)
+v156.FocusLost:Connect(function()v244(v156.Text)end)
+task.defer(function()v244(v156.Text)end)
+
+for _,v245 in ipairs(v1:GetPlayers()) do
+	v177[v245]=v245.Name
+	v178[v245]=v245.DisplayName
+	v205(v245)
+end
+v5[#v5+1]=v1.PlayerAdded:Connect(function(v245)
+	v177[v245]=v245.Name
+	v178[v245]=v245.DisplayName
+	v205(v245)
+	if v262~='' then v244(v262) end
+end)
+v5[#v5+1]=v1.PlayerRemoving:Connect(function(v245)
+	v213(v245)
+	if v262~='' then v244(v262) end
+end)
+
+if v7.Character then v202(v7.Character) end
+v5[#v5+1]=v7.CharacterAdded:Connect(v202)
+
+v5[#v5+1]=v4.Heartbeat:Connect(function(v245)
+	v183=v245
+	if v182>0 then
+		for v246=1,v182 do
+			local v247=v181[v246]
+			if v247 then v217(v247) end
+		end
+	end
+	local v246=v184
+	if not v246 then v195=false v189=0 return end
+	local v247=nil
+	if v161() then
+		local v248=v176
+		if not v248 then v195=false v189=0 return end
+		v247=v250(v248)
+		if not v247 then v195=false v189=0 return end
+		v189=1
+	elseif v169() then
+		v247=v238()
+		if not v247 then v195=false v189=0 return end
+		v189=2
+	elseif v166() then
+		v195=false v189=0
+		return
+	else
+		v195=false v189=0
+		return
+	end
+	v196=v246.CFrame
+	v197=v246.Velocity
+	v198=v246.RotVelocity
+	v246.CFrame=v247
+	v246.Velocity=v707()
+	v246.RotVelocity=Vector3.new(2147483647,2147483647,2147483647)
+	v600=os.clock()
+	v195=true
+end)
+
+v4:BindToRenderStep('v3',Enum.RenderPriority.Camera.Value-1,function()
+	if not v195 or v189~=2 then return end
+	local v245=v184
+	if not v245 then v195=false return end
+	if v196 and v197 and v198 then v245.CFrame=v196 v245.Velocity=v197 v245.RotVelocity=v198 end
+	v195=false
+end)
+
+v5[#v5+1]=v4.RenderStepped:Connect(function()
+	if v6 then return end
+	local v701=v7.Character
+	if v600>0 and os.clock()-v600<.1 and v701 then
+		if (not v700) or (not v700.Parent) then v700=Instance.new('Highlight',v701) end
+		v700.Adornee=v701
+		v700.FillColor=Color3.new(1,0,0)
+		v700.FillTransparency=.5
+		v700.OutlineTransparency=1
+	else
+		if v700 and v700.Parent then pcall(function()v700:Destroy()end) end
+		v700=nil
+	end
+	if v195 and v189==1 then
+		local v246=v184
+		if v246 and v196 and v197 and v198 then v246.CFrame=v196 v246.Velocity=v197 v246.RotVelocity=v198 end
+		v195=false
+	end
+	local v245=v176
+	if v245 and v245.Parent~=v1 then v176=nil v245=nil end
+	if v245 then
+		local v246a=v245.DisplayName or v245.Name
+		v157.Text=v19('Target')..': '..v246a
+	else
+		v157.Text=v19('Target')..': NONE'
+	end
+end)
+
+if v713 then v713(.46,'Creating Group.Spectate...') end
+local v2650,v2651=CreateGroup(v105,'Spectate')
+local v2652=0
+local function v2653()v2652=v2652+1 return v2652%2==1 and v2650 or v2651 end
+
+local v2655,v2656=CreateInput(v2653(),'Target',function(v2657) if v2682a then v2682a(v2657) end end)
+local v2690a=CreateDisplay(v2653(),'Target: NONE')
+local v2680a,v2681a=nil,''
+local function v2682a(v2683a)
+	local v2684a=string.lower(v2683a or '')
+	v2681a=v2683a or ''
+	if v2684a=='' then
+		v2680a=nil
+		if v2690a then v2690a.Text=v19('Target')..': NONE' end
+		return
+	end
+	for v2685a,v2686a in pairs(v177) do
+		if v2686a and string.lower(v2686a)==v2684a then
+			v2680a=v2685a
+			if v2690a then v2690a.Text=v19('Target')..': '..(v2685a.DisplayName or v2685a.Name) end
+			return
+		end
+	end
+	for v2685a,v2686a in pairs(v178) do
+		if v2686a and string.lower(v2686a)==v2684a then
+			v2680a=v2685a
+			if v2690a then v2690a.Text=v19('Target')..': '..(v2685a.DisplayName or v2685a.Name) end
+			return
+		end
+	end
+	local v2685a={}
+	for v2686a,v2687a in pairs(v177) do
+		if v2687a and string.find(string.lower(v2687a),v2684a,1,true) then
+			v2685a[#v2685a+1]=v2686a
+		end
+	end
+	if #v2685a==1 then
+		v2680a=v2685a[1]
+		if v2690a then v2690a.Text=v19('Target')..': '..(v2680a.DisplayName or v2680a.Name) end
+		return
+	end
+	if #v2685a==0 then
+		for v2686a,v2687a in pairs(v178) do
+			if v2687a and string.find(string.lower(v2687a),v2684a,1,true) then
+				v2685a[#v2685a+1]=v2686a
+			end
+		end
+		if #v2685a==1 then
+			v2680a=v2685a[1]
+			if v2690a then v2690a.Text=v19('Target')..': '..(v2680a.DisplayName or v2680a.Name) end
+		else
+			v2680a=nil
+			if v2690a then v2690a.Text=v19('Target')..': NONE' end
+		end
+	else
+		v2680a=nil
+		if v2690a then v2690a.Text=v19('Target')..': NONE' end
+	end
+end
+v2682a(v2656.Text)
+v2656:GetPropertyChangedSignal('Text'):Connect(function()v2682a(v2656.Text)end)
+v2656.FocusLost:Connect(function()v2682a(v2656.Text)end)
+
+local v2659,v2660=nil,false
+local v2661,v2662,v2663=CreateToggle(v2653(),'Spectate',nil,function(v2664)
+	if v2660 then v4:UnbindFromRenderStep('v8') v2660=false end
+	local v2665=workspace.CurrentCamera
+	if not v2664 then
+		if v2665 and v2659 then v2665.CameraSubject=v2659 end
+		v2659=nil
+		return
+	end
+	if v2665 then v2659=v2665.CameraSubject end
+	v2660=true
+	v4:BindToRenderStep('v8',Enum.RenderPriority.Camera.Value+1,function()
+		if v6 then return end
+		local v2666=workspace.CurrentCamera
+		if not v2666 then return end
+		local v2667=v2680a
+		if not v2667 or v2667.Parent~=v1 then if v2659 and v2666.CameraSubject~=v2659 then v2666.CameraSubject=v2659 end return end
+		local v2668=v2667.Character
+		if not v2668 then if v2659 and v2666.CameraSubject~=v2659 then v2666.CameraSubject=v2659 end return end
+		local v2669=nil
+		for _,v2670 in ipairs(v2668:GetChildren()) do if v2670:IsA('Humanoid') then v2669=v2670 break end end
+		if not v2669 or v2669.Health<=0 then if v2659 and v2666.CameraSubject~=v2659 then v2666.CameraSubject=v2659 end return end
+		v2666.CameraSubject=v2669
+	end)
+end)
+
+if v713 then v713(.5,'Creating Group.Shader...') end
+local v2671,v2672=CreateGroup(v105,'Shader')
+local v2673=0
+local function v2674()v2673=v2673+1 return v2673%2==1 and v2671 or v2672 end
+
+local v2675,v2676,v2688=nil,nil,nil
+local v2677,v2678,v2679=CreateToggle(v2674(),'Mini Shader',nil,function(v2680)
+	if v2676 then v2676:Disconnect()v2676=nil end
+	local v2681=game:service'Lighting'
+	if not v2680 then
+		if v2675 then
+			pcall(function()v2681.Brightness=v2675[1]end)
+			pcall(function()v2681.ShadowSoftness=v2675[2]end)
+			pcall(function()v2681.EnvironmentDiffuseScale=v2675[3]end)
+			pcall(function()v2681.EnvironmentSpecularScale=v2675[4]end)
+			pcall(function()v2681.Ambient=v2675[5]end)
+			pcall(function()v2681.OutdoorAmbient=v2675[6]end)
+			pcall(function()v2681.GlobalShadows=v2675[7]end)
+		end
+		local v2682={}
+		for _,v2683 in ipairs(v2681:GetChildren()) do
+			if v2683.ClassName=='SunRaysEffect' then v2682[#v2682+1]=v2683 end
+		end
+		for v2683=1,#v2682 do pcall(function()v2682[v2683]:Destroy()end) end
+		if v2688 then
+			for v2682,v2683 in ipairs(v2688) do
+				local v2684=Instance.new('SunRaysEffect',v2681)
+				pcall(function()v2684.Enabled=v2683[1]end)
+				pcall(function()v2684.Intensity=v2683[2]end)
+				pcall(function()v2684.Spread=v2683[3]end)
+			end
+		end
+		v2675=nil
+		v2688=nil
+		return
+	end
+	v2675={v2681.Brightness,v2681.ShadowSoftness,v2681.EnvironmentDiffuseScale,v2681.EnvironmentSpecularScale,v2681.Ambient,v2681.OutdoorAmbient,v2681.GlobalShadows}
+	v2688={}
+	for _,v2682 in ipairs(v2681:GetChildren()) do
+		if v2682.ClassName=='SunRaysEffect' then
+			v2688[#v2688+1]={v2682.Enabled,v2682.Intensity,v2682.Spread}
+		end
+	end
+	v2676=v4.RenderStepped:Connect(function()
+		if v6 then return end
+		pcall(function()v2681.Brightness=4 end)
+		pcall(function()v2681.ShadowSoftness=0 end)
+		pcall(function()v2681.EnvironmentDiffuseScale=.202 end)
+		pcall(function()v2681.EnvironmentSpecularScale=.202 end)
+		pcall(function()v2681.Ambient=Color3.fromRGB(64,72,79) end)
+		pcall(function()v2681.OutdoorAmbient=Color3.fromRGB(64,72,79) end)
+		pcall(function()v2681.GlobalShadows=true end)
+		local v2682={}
+		for _,v2683 in ipairs(v2681:GetChildren()) do
+			if v2683.ClassName=='SunRaysEffect' then v2682[#v2682+1]=v2683 end
+		end
+		local v2684=#v2682
+		local v2685=nil
+		if v2684<1 then
+			v2685=Instance.new('SunRaysEffect',v2681)
+		else
+			v2685=v2682[math.random(1,v2684)]
+			for v2686=1,v2684 do
+				local v2687=v2682[v2686]
+				if v2687~=v2685 then pcall(function()v2687:Destroy()end) end
+			end
+		end
+		if v2685 and v2685.Parent then
+			pcall(function()v2685.Enabled=true end)
+			pcall(function()v2685.Intensity=.5 end)
+			pcall(function()v2685.Spread=2 end)
+		end
+	end)
+	v5[#v5+1]=v2676
+end)
+
+if v713 then v713(.54,'Creating Group.Anti...') end
+local v248,v249=CreateGroup(v105,'Anti')
+local v250=0
+local function v251()
+	v250=v250+1
+	return v250%2==1 and v248 or v249
+end
+
+local v252,v253=nil,nil
+local v254,v255,v256=CreateToggle(v251(),'Anti Void',nil,function(v257)
+	if v253 then v253:Disconnect()v253=nil end
+	if v257 then
+		v252=workspace.FallenPartsDestroyHeight
+		v253=v4.RenderStepped:Connect(function()workspace.FallenPartsDestroyHeight=0/0 end)
+		v5[#v5+1]=v253
+	else
+		if v252~=nil then workspace.FallenPartsDestroyHeight=v252 v252=nil end
+	end
+end)
+
+local v257,v261=nil,0
+local v258,v259,v260=CreateToggle(v251(),'Anti AFK',nil,function(v262)
+	if v257 then v257:Disconnect()v257=nil end
+	v261=0
+	if v262 then
+		v257=v4.Heartbeat:Connect(function(v263)
+			v261=v261+v263
+			if v261>=100 then
+				v261=v261-100
+				game:service'VirtualInputManager':SendKeyEvent(true,Enum.KeyCode.Unknown,false,game)
+				game:service'VirtualInputManager':SendKeyEvent(false,Enum.KeyCode.Unknown,false,game)
+			end
+		end)
+		v5[#v5+1]=v257
+	end
+end)
+
+local v262,v263,v264={}, {}, {}
+local function v265(v266)
+	return v702(v266)
+end
+local function v268(v269)
+	if v269==v7 or v262[v269] then return end
+	v262[v269]=true
+	local v270={}
+	v263[v269]=v270
+	local v271=v269.Character
+	if v271 then
+		v264[v269]=v265(v271)
+		v270[1]=v271.ChildAdded:Connect(function(v272)
+			local v273=v272.Name
+			if v273=='HumanoidRootPart' or v273=='Torso' or v273=='Head' then v264[v269]=v265(v271) end
+		end)
+		v270[2]=v271.ChildRemoved:Connect(function(v272)
+			local v273=v272.Name
+			if v273=='HumanoidRootPart' or v273=='Torso' or v273=='Head' then v264[v269]=v265(v271) end
+		end)
+		v5[#v5+1]=v270[1]v5[#v5+1]=v270[2]
+	end
+	v270[3]=v269.CharacterAdded:Connect(function(v272)
+		v264[v269]=v265(v272)
+		if v270[1] then v270[1]:Disconnect()v270[1]=nil end
+		if v270[2] then v270[2]:Disconnect()v270[2]=nil end
+		v270[1]=v272.ChildAdded:Connect(function(v273)
+			local v274=v273.Name
+			if v274=='HumanoidRootPart' or v274=='Torso' or v274=='Head' then v264[v269]=v265(v272) end
+		end)
+		v270[2]=v272.ChildRemoved:Connect(function(v273)
+			local v274=v273.Name
+			if v274=='HumanoidRootPart' or v274=='Torso' or v274=='Head' then v264[v269]=v265(v272) end
+		end)
+		v5[#v5+1]=v270[1]v5[#v5+1]=v270[2]
+	end)
+	v5[#v5+1]=v270[3]
+end
+for _,v266 in ipairs(v1:GetPlayers()) do v268(v266) end
+v5[#v5+1]=v1.PlayerAdded:Connect(function(v266)v268(v266)end)
+v5[#v5+1]=v1.PlayerRemoving:Connect(function(v266)
+	v262[v266]=nil
+	v264[v266]=nil
+	local v267=v263[v266]
+	if v267 then
+		if v267[2] then v267[2]:Disconnect()end
+		if v267[1] then v267[1]:Disconnect()end
+		if v267[3] then v267[3]:Disconnect()end
+	end
+	v263[v266]=nil
+end)
+
+local v269,v270=nil,nil
+local v271,v272,v273=CreateToggle(v251(),'Anti Fling v2',nil,function(v274)
+	if v269 then v269:Disconnect()v269=nil end
+	if v270 then v270:Disconnect()v270=nil end
+	if v274 then
+		local function v275()
+			for v276,v277 in pairs(v264) do
+				if v276~=v7 and v277 and v277.Parent then v277.Velocity=Vector3.new()v277.RotVelocity=Vector3.new() end
+			end
+		end
+		v269=v4.Heartbeat:Connect(v275)
+		v270=v4.RenderStepped:Connect(v275)
+		v5[#v5+1]=v269
+	v5[#v5+1]=v270
+	end
+end)
+
+local v2800,v2801,v2802,v2803,v2804,v2805,v2806,v2807,v2808,v2809,v2811={},nil,nil,nil,nil,{},nil,nil,nil,nil,{}
+local function v2810(v2811)
+	local v2812,v2813=v2811:GetDescendants(),{}
+	for v2814=1,#v2812 do
+		local v2815=v2812[v2814]
+		if v2815:IsA('BasePart') then v2813[#v2813+1]=v2815 end
+	end
+	return v2813
+end
+local function v2816()
+	local v2817=v2805[#v2805]
+	if v2817 then v2805[#v2805]=nil return v2817 end
+	return Instance.new('NoCollisionConstraint')
+end
+local function v2818(v2819)
+	v2819.Part0=nil
+	v2819.Part1=nil
+	v2819.Parent=nil
+	v2805[#v2805+1]=v2819
+end
+local function v2820(v2821)
+	local v2822=v2800[v2821]
+	if not v2822 then return end
+	local v2823=v2822[4]
+	if v2823 then
+		for v2824=1,#v2823 do
+			local v2825=v2823[v2824]
+			if v2825 then pcall(function()v2825:Disconnect()end) end
+		end
+	end
+	local v2826=v2822[1]
+	for v2827=1,#v2826 do
+		local v2828=v2826[v2827]
+		if v2828 then v2818(v2828) end
+	end
+	v2800[v2821]=nil
+end
+local function v2829(v2830,v2831,v2832)
+	local v2833=v2800[v2832]
+	if not v2833 then return end
+	local v2834=v2833[6]
+	if v2834[v2831] then return end
+	v2834[v2831]=true
+	local v2835=v2833[3]
+	v2835[#v2835+1]=v2831
+	local v2836=v2801
+	if not v2836 then return end
+	for v2837=1,#v2836 do
+		local v2838=v2836[v2837]
+		if v2838 and v2838.Parent and v2831 and v2831.Parent then
+			local v2839=v2816()
+			v2839.Part0=v2838
+			v2839.Part1=v2831
+			v2839.Parent=v2804
+			local v2840=v2833[1]
+			v2840[#v2840+1]=v2839
+			local v2841=v2833[2]
+			v2841[#v2841+1]=v2837
+			local v2842=v2833[5]
+			v2842[#v2842+1]=v2831
+		end
+	end
+end
+local function v2843()
+	local v2844=v1:GetPlayers()
+	for v2845=1,#v2844 do
+		local v2846=v2844[v2845]
+		if v2846~=v7 then
+			local v2847=v2800[v2846]
+			if v2847 then
+				local v2848=v2847[3]
+				for v2849=1,#v2848 do
+					v2829(v2846,v2848[v2849],v2846)
+				end
+			end
+		end
+	end
+end
+local function v2850(v2851)
+	if v2803 then pcall(function()v2803:Disconnect()end) end
+	v2802=v2851
+	v2801=v2810(v2851)
+	v2803=v2851.DescendantAdded:Connect(function(v2852)
+		if not v2852:IsA('BasePart') then return end
+		local v2853=v2801
+		v2853[#v2853+1]=v2852
+		for v2854,v2855 in pairs(v2800) do
+			local v2856=v2855[3]
+			for v2857=1,#v2856 do
+				local v2858=v2856[v2857]
+				if v2852.Parent and v2858 and v2858.Parent then
+					local v2859=v2816()
+					v2859.Part0=v2852
+					v2859.Part1=v2858
+					v2859.Parent=v2804
+					local v2860=v2855[1]
+					v2860[#v2860+1]=v2859
+					local v2861=v2855[2]
+					v2861[#v2861+1]=#v2853
+					local v2862=v2855[5]
+					v2862[#v2862+1]=v2858
+				end
+			end
+		end
+	end)
+	for v2863,v2864 in pairs(v2800) do
+		local v2865,v2866,v2867=v2864[1],v2864[2],v2864[5]
+		local v2868=#v2865
+		for v2869=v2868,1,-1 do
+			local v2870,v2871,v2872=v2865[v2869],v2866[v2869],v2867[v2869]
+			local v2873=v2801[v2871]
+			if v2870 and v2873 and v2873.Parent and v2872 and v2872.Parent then
+				v2870.Part0=v2873
+				v2870.Part1=v2872
+			else
+				if v2870 then v2818(v2870) end
+				v2865[v2869]=v2865[#v2865] v2865[#v2865]=nil
+				v2866[v2869]=v2866[#v2866] v2866[#v2866]=nil
+				v2867[v2869]=v2867[#v2867] v2867[#v2867]=nil
+			end
+		end
+	end
+	v2843()
+end
+local function v2874(v2875)
+	if v2875==v7 then
+		if v2809 then v2809:Disconnect()v2809=nil end
+		v2809=v7.CharacterAdded:Connect(function(v2876)v2850(v2876)end)
+		if v7.Character then v2850(v7.Character) end
+		return
+	end
+	local function v2876()
+		task.defer(function()
+			local v2877=v2875.Character
+			if not v2877 then return end
+			v2820(v2875)
+			local v2878={{},{},{},{},{},{} }
+			v2800[v2875]=v2878
+			local v2879=v2878[4]
+			v2879[#v2879+1]=v2877.DescendantAdded:Connect(function(v2880)
+				if not v2880:IsA('BasePart') then return end
+				v2829(v2875,v2880,v2875)
+			end)
+			for v2881=1,2 do task.wait() end
+			local v2882=v2810(v2877)
+			for v2883=1,#v2882 do v2829(v2875,v2882[v2883],v2875) end
+		end)
+	end
+	local v2876a=v2811[v2875]
+	if not v2876a then
+		v2876a=v2875.CharacterAdded:Connect(v2876)
+		v2811[v2875]=v2876a
+		v5[#v5+1]=v2876a
+	end
+	if v2875.Character then v2876() end
+end
+local function v2884(v2885)
+	local v2886a=v2811[v2885]
+	if v2886a then pcall(function()v2886a:Disconnect()end) end
+	v2811[v2885]=nil
+	v2820(v2885)
+end
+
+local v2886,v2887,v2888=CreateToggle(v251(),'Anti Fling v1',nil,function(v2889)
+	if v2807 then v2807:Disconnect()v2807=nil end
+	if v2808 then v2808:Disconnect()v2808=nil end
+	if v2809 then v2809:Disconnect()v2809=nil end
+	if v2803 then pcall(function()v2803:Disconnect()end)v2803=nil end
+	for v2892 in pairs(v2811) do
+		local v2893=v2811[v2892]
+		if v2893 then pcall(function()v2893:Disconnect()end) end
+		v2811[v2892]=nil
+	end
+	if not v2889 then
+		for v2890,v2891 in pairs(v2800) do v2820(v2890) end
+		for v2890 in pairs(v2800) do v2800[v2890]=nil end
+		v2801=nil v2802=nil
+		return
+	end
+	if not v2804 then v2804=Instance.new('Folder') v2804.Parent=workspace end
+	v2807=v1.PlayerAdded:Connect(v2874)
+	v2808=v1.PlayerRemoving:Connect(v2884)
+	local v2890=v1:GetPlayers()
+	for v2891=1,#v2890 do v2874(v2890[v2891]) end
+	v5[#v5+1]=v2807
+	v5[#v5+1]=v2808
+end)
+
+if v713 then v713(.58,'Creating Group.Humanoid...') end
+local v276,v277=CreateGroup(v105,'Humanoid')
+local v278=0
+local function v279()
+	v278=v278+1
+	return v278%2==1 and v276 or v277
+end
+
+local function v280()
+	if v6 then return end
+	local v281=v7.Character
+	local v282=v73
+	if v282 then pcall(function()v282:ChangeState(Enum.HumanoidStateType.Dead)end)pcall(function()v282.Health=0 end)end
+	if v281 then pcall(function()v281:BreakJoints()end)end
+end
+
+CreateButton(v279(),'Reset',v280)
+
+local v283=nil
+CreateToggle(v279(),'Loop Reset',nil,function(v284)
+	if v283 then v283:Disconnect()v283=nil end
+	if v284 then
+		v283=v4.RenderStepped:Connect(function()v280()end)
+		v5[#v5+1]=v283
+	end
+end)
+
+if v2.KeyboardEnabled and v2.MouseEnabled and not v2.TouchEnabled then
+	local v285,v286,v287=CreateToggle(v279(),'Quick Reset')
+	CreateKeybind(v279(),'Trigger',function()
+		if v287 and v287() then v280()end
+	end)
+end
+
+local v288,v289,v290={},nil,nil
+CreateToggle(v279(),'NoClip',nil,function(v291)
+	if v289 then v289:Disconnect()v289=nil end
+	if not v291 then
+		for v292,v293 in pairs(v288) do if v292 and v292.Parent then v292.CanCollide=v293 end end
+		for v292 in pairs(v288) do v288[v292]=nil end
+		v290=nil
+		return
+	end
+	v289=v4.Stepped:Connect(function()
+		if v6 then return end
+		local v292=v7.Character
+		if not v292 then return end
+		if v290~=v292 then v290=v292 end
+		for _,v293 in ipairs(v292:GetDescendants()) do
+			if v293:IsA('BasePart') then
+				if v288[v293]==nil then v288[v293]=v293.CanCollide end
+				v293.CanCollide=false
+			end
+		end
+	end)
+	v5[#v5+1]=v289
+end)
+
+local v293=nil
+CreateToggle(v279(),'InfJump',nil,function(v294)
+	if v293 then v293:Disconnect()v293=nil end
+	if v294 then
+		v293=v2.JumpRequest:Connect(function()
+			if v6 then return end
+			if v73 then pcall(function()v73:ChangeState(Enum.HumanoidStateType.Jumping)end)end
+		end)
+		v5[#v5+1]=v293
+	end
+end)
+
+local v295=nil
+local v296,v297=nil,nil
+CreateToggle(v279(),'Anchor',nil,function(v298)
+	if v296 then v296:Disconnect()v296=nil end
+	if v297 then v297:Disconnect()v297=nil end
+	v297=nil
+	if not v298 then
+		v295=nil
+		return
+	end
+		local v299a=v721 and v721() or nil
+		if v299a then v295=v299a else
+			local v299b=v74
+			if v299b and v299b.Parent then v295=v299b.CFrame end
+		end
+	local function v299()
+		if v6 then return end
+		if not v295 then
+			local v300=v74
+			if v300 and v300.Parent then v295=v300.CFrame end
+		end
+		local v300=v74
+		local v301=v295
+		if v300 and v300.Parent and v301 then
+			v300.CFrame=v301
+			v300.Velocity=v707()
+			v300.RotVelocity=Vector3.new()
+		end
+	end
+	v296=v4.Heartbeat:Connect(v299)
+	v5[#v5+1]=v296
+end)
+
+if v713 then v713(.62,'Creating Group.Other...') end
+local v301,v302=CreateGroup(v105,'Other')
+local v303=0
+local function v304()
+	v303=v303+1
+	return v303%2==1 and v301 or v302
+end
+
+CreateButton(v304(),'Rejoin',function()
+	local v1,v2,v3,v4,v5,v6=game:service'TeleportService',game:service'Players'.LocalPlayer,Instance.new('ScreenGui'),Instance.new('Frame'),Instance.new('TextLabel'),Enum.Font.Code
+	v3.DisplayOrder=2147483647
+	v3.IgnoreGuiInset=true
+	v3.ResetOnSpawn=false
+	v4.Size=UDim2.fromScale(1,1)
+	v4.BackgroundColor3=Color3.new()
+	v4.BorderSizePixel=0
+	v4.Parent=v3
+	v5.Size=UDim2.fromOffset(220,22)
+	v5.Position=UDim2.fromScale(.5,.5)
+	v5.AnchorPoint=Vector2.new(.5,.5)
+	v5.BackgroundTransparency=1
+	v5.Text='Loading...'
+	v5.TextColor3=Color3.new(1,1,1)
+	v5.Font=v6
+	v5.TextSize=22
+	v5.Parent=v4
+	v1.TeleportInitFailed:Connect(function(v7)
+		if v7==v2 then
+			v1:SetTeleportGui(nil)
+		end
+	end)
+	v1:SetTeleportGui(v3)
+	v1:Teleport(game.PlaceId,v2)
+end)
+
+local v305,v306,v307=CreateToggle(v304(),'Chat')
+v306(true)
+local v308=game:service'TextChatService'
+v5[#v5+1]=v4.RenderStepped:Connect(function()
+	if v6 then return end
+	local v309=v307()
+	pcall(function()game:service'StarterGui':SetCoreGuiEnabled(Enum.CoreGuiType.Chat,v309)end)
+	pcall(function()v308.BubbleChatConfiguration.Enabled=v309 end)
+	pcall(function()v308.ChatInputBarConfiguration.Enabled=v309 end)
+	pcall(function()v308.ChatWindowConfiguration.Enabled=v309 end)
+end)
+
+local v310,v311={},nil
+local v312,v313,v314=nil,nil,nil
+local v315,v316,v317=CreateToggle(v304(),'Instant Prompt',nil,function(v318)
+	if v312 then v312:Disconnect()v312=nil end
+	if v313 then v313:Disconnect()v313=nil end
+	if v314 then v314:Disconnect()v314=nil end
+	if not v318 then
+		for v319,v320 in pairs(v310) do if v319 and v319.Parent then v319.HoldDuration=v320 end end
+		for v319 in pairs(v310) do v310[v319]=nil end
+		return
+	end
+	local v319=game:service'ProximityPromptService'
+	v312=v319.PromptShown:Connect(function(v320)
+		if v310[v320]==nil then v310[v320]=v320.HoldDuration end
+		v320.HoldDuration=0
+	end)
+	v313=v319.PromptHidden:Connect(function(v320)
+		local v321=v310[v320]
+		if v321~=nil and v320 and v320.Parent then v320.HoldDuration=v321 end
+		v310[v320]=nil
+	end)
+	v314=v4.RenderStepped:Connect(function()
+		if v6 then return end
+		for v320 in pairs(v310) do if v320 and v320.Parent then v320.HoldDuration=0 else v310[v320]=nil end end
+	end)
+	v5[#v5+1]=v312
+	v5[#v5+1]=v313 v5[#v5+1]=v314
+end)
+
+local v318=false
+CreateButton(v304(),'Fire All Touch',function()
+	if v6 or v318 then return end
+	v318=true
+	task.spawn(function()
+		local v319=v74
+		if not v319 or not v319.Parent then v318=false return end
+		local v320=v319.CFrame
+		local v321,v322=v319.Velocity,v319.RotVelocity
+		local v323={}
+		for _,v324 in ipairs(workspace:GetDescendants()) do
+			if v324:IsA('TouchTransmitter') then
+				local v325=v324.Parent
+				if v325 and v325:IsA('BasePart') then v323[#v323+1]=v325 end
+			end
+		end
+		for v326=1,#v323 do
+			if v6 then break end
+			local v325=v323[v326]
+			if v325 and v325.Parent then
+				local v327=v74
+				if not v327 or not v327.Parent then break end
+				v327.CFrame=CFrame.new(v325.CFrame.p)*(v320-v320.p)
+			end
+			v4.Heartbeat:Wait()
+			local v327=v74
+			if not v327 or not v327.Parent then break end
+			local v328,v329,v330=v327.CFrame,v327.Velocity,v327.RotVelocity
+			v327.CFrame=v320
+			v327.Velocity=v707()
+			v327.RotVelocity=Vector3.new()
+			v4.RenderStepped:Wait()
+			v327=v74
+			if not v327 or not v327.Parent then break end
+			v327.CFrame=v328
+			v327.Velocity=v329
+			v327.RotVelocity=v330
+		end
+		local v327=v74
+		if v327 and v327.Parent then
+			v327.CFrame=v320
+			v327.Velocity=v321
+			v327.RotVelocity=v322
+		end
+		v318=false
+	end)
+end)
+
+local function v333()
+if v713 then v713(.58) end
+local v331=nil
+CreateToggle(v304(),'No Fog',nil,function(v332)
+	if v331 then v331:Disconnect()v331=nil end
+	if v332 then
+		v331=v4.RenderStepped:Connect(function()
+			if v6 then return end
+			local v333=game:service'Lighting'
+			for _,v334 in ipairs(v333:GetChildren()) do
+				if v334:IsA('Atmosphere') then v334:Destroy() end
+			end
+			v333.FogEnd=1/0
+		end)
+		v5[#v5+1]=v331
+	end
+end)
+
+local v4310,v4311=nil,nil
+CreateToggle(v304(),'Status',nil,function(v4312)
+	if v4311 then pcall(function()v4311:Destroy()end)v4311=nil end
+	if v4310 then for v4313=1,#v4310 do pcall(function()v4310[v4313]:Disconnect()end) end v4310=nil end
+	if not v4312 then return end
+	local v4314=Instance.new('ScreenGui')
+	local v4315
+	local v4316,v4317=pcall(function()return gethui()end)
+	if v4316 and v4317 then v4315=v4317 else
+		local v4318,v4319=pcall(function()return get_hidden_gui()end)
+		if v4318 and v4319 then v4315=v4319 else v4315=game:service'CoreGui' end
+	end
+	v4314.Parent=v4315
+	v4314.DisplayOrder=2147483647
+	v4314.IgnoreGuiInset=true
+	local v4310f=Instance.new('Frame')
+	v4310f.Parent=v4314
+	v4310f.AnchorPoint=Vector2.new(0,0)
+	v4310f.Position=UDim2.new(0,1,0,0)
+	v4310f.Size=UDim2.new(0,150,0,200)
+	v4310f.Position=UDim2.new(0,1,0,workspace.CurrentCamera.ViewportSize.Y-v4310f.Size.Y.Offset-1)
+	v4310f.BackgroundColor3=Color3.new(.15,.15,.15)
+	v4310f.BorderSizePixel=1
+	v4310f.BorderColor3=Color3.new(1,1,1)
+	v4310f.Active=true
+	local v4311c=Instance.new('UICorner')
+	v4311c.Parent=v4310f
+	v4311c.CornerRadius=UDim.new(0,10)
+	local v4312s=Instance.new('UIStroke')
+	v4312s.Parent=v4310f
+	v4312s.Thickness=1
+	v4312s.Color=Color3.new(1,1,1)
+	local v4313w,v4314w,v4315w=70,18,15
+	local v4316w={'Pos','Ori','Vel','RVel','WS','JP','JH','HP','Rig','FPS','Ping'}
+	local v4317w={}
+	local v4318w,v4319w=nil,{}
+	local v4320w=math.floor((v4313w-20)*.6+.5)
+	local v4321w=10+v4320w+10
+	for v4322w,v4323w in ipairs(v4316w) do
+		local v4324w=Instance.new('TextButton')
+		v4324w.Parent=v4310f
+		v4324w.BackgroundColor3=Color3.new(.2,.2,.2)
+		v4324w.BorderSizePixel=0
+		v4324w.AutoButtonColor=false
+		v4324w.ZIndex=10
+		v4324w.Text=''
+		v4324w.Position=UDim2.new(0,10,0,2+(v4322w-1)*v4314w)
+		v4324w.Size=UDim2.new(0,v4320w+2,0,v4315w+2)
+		local v4325w=Instance.new('TextLabel')
+		v4325w.Parent=v4324w
+		v4325w.BackgroundTransparency=1
+		v4325w.Size=UDim2.new(1,0,1,0)
+		v4325w.Position=UDim2.new(0,0,0,-2)
+		v4325w.Font=Enum.Font.Code
+		v4325w.TextColor3=Color3.new(1,1,1)
+		v4325w.TextSize=14
+		v4325w.ZIndex=11
+		v4325w.Text='Copy'
+		local v4326w=Instance.new('TextLabel')
+		v4326w.Parent=v4310f
+		v4326w.BackgroundTransparency=1
+		v4326w.Position=UDim2.new(0,v4321w,0,2+(v4322w-1)*v4314w)
+		v4326w.Size=UDim2.new(1,-v4321w-10,0,v4315w)
+		v4326w.Font=Enum.Font.Code
+		v4326w.TextColor3=Color3.new(1,1,1)
+		v4326w.TextSize=15
+		v4326w.TextXAlignment=Enum.TextXAlignment.Left
+		v4326w.TextYAlignment=Enum.TextYAlignment.Center
+		v4326w.Text=''
+		v4317w[v4322w]=v4326w
+		v4319w[v4322w]=v4324w
+		v4324w.MouseButton1Click:Connect(function()
+			local v4327w=v4318w
+			if not v4327w then return end
+			local v4328w=v4327w[v4322w]
+			if not v4328w then return end
+			local v4329w=pcall(function()setclipboard(v4328w)end)
+			if v4329w then v4324w.BackgroundColor3=Color3.new(.2,.8,.35) else v4324w.BackgroundColor3=Color3.new(.85,.25,.25) end
+			task.delay(1,function()if v4324w then v4324w.BackgroundColor3=Color3.new(.2,.2,.2) end end)
+		end)
+	end
+	local v4330w=game:service'RunService'
+	local v4331w=game:service'TextService'
+	local v4332w,v4333w,v4334w,v4335w,v4336w,v4337w=nil,nil,nil,nil,nil,nil
+	local v4338w
+	local v4380w,v4381w,v4382w=nil,0,0
+	pcall(function()
+		local v4383w=game:service'Stats'
+		local v4384w=nil
+		for _,v4385w in ipairs(v4383w:GetChildren()) do if v4385w.Name=='Network' then v4384w=v4385w break end end
+		local v4386w=nil
+		if v4384w then for _,v4385w in ipairs(v4384w:GetChildren()) do if v4385w.Name=='ServerStatsItem' then v4386w=v4385w break end end end
+		if v4386w then for _,v4385w in ipairs(v4386w:GetChildren()) do if v4385w.Name=='Data Ping' or v4385w.Name=='Ping' then v4380w=v4385w break end end end
+	end)
+	v4337w=function(v4339w)return math.floor(v4339w*100+.5)/100 end
+	local v4340w=function(v4341w)
+		local v4342w=string.format('%.2f',v4337w(v4341w))
+		v4342w=v4342w:gsub('%.?0+$','')
+		if v4342w=='' or v4342w=='-' then v4342w='0' end
+		return v4342w
+	end
+	local function v4341w(v4342w)
+		v4332w=nil
+		v4333w=nil
+		for _,v4343w in ipairs(v4342w:GetChildren()) do
+			if v4343w.ClassName=='Humanoid' then v4333w=v4343w break end
+		end
+		v4332w=v702(v4342w)
+		if v4335w then v4335w:Disconnect() end
+		v4335w=v4342w.ChildAdded:Connect(function(v4344w)
+			if v4344w.ClassName=='Humanoid' then v4333w=v4344w end
+			local v4345w=v4344w.Name
+			if v4345w=='HumanoidRootPart' or v4345w=='Torso' or v4345w=='Head' then v4332w=v702(v4342w) end
+			if v4338w then v4338w() end
+		end)
+		if v4338w then v4338w() end
+	end
+	v4338w=function()
+		local v4342w,v4343w=v4332w,v4333w
+		if not v4342w or not v4343w then return end
+		local v4344w=v4342w.Position
+		local v4345w=v4342w.Orientation
+		local v4346w=v4342w.Velocity
+		local v4347w=v4342w.RotVelocity
+		local v4348w=v4343w.RigType==Enum.HumanoidRigType.R6 and 'R6' or 'R15'
+		local v4349w={
+			'Pos: '..v4340w(v4344w.X)..','..v4340w(v4344w.Y)..','..v4340w(v4344w.Z),
+			'Ori: '..v4340w(v4345w.X)..','..v4340w(v4345w.Y)..','..v4340w(v4345w.Z),
+			'Vel: '..v4340w(v4346w.X)..','..v4340w(v4346w.Y)..','..v4340w(v4346w.Z),
+			'RVel: '..v4340w(v4347w.X)..','..v4340w(v4347w.Y)..','..v4340w(v4347w.Z),
+			'WS: '..v4340w(v4343w.WalkSpeed),
+			'JP: '..v4340w(v4343w.JumpPower),
+			'JH: '..v4340w(v4343w.JumpHeight),
+			'HP: '..v4340w(v4343w.Health)..'/'..v4340w(v4343w.MaxHealth),
+			'Rig: '..v4348w,
+			'FPS: '..tostring(math.floor(v4381w+.5)),
+			'Ping: '..tostring(math.floor(v4382w+.5))..'ms'
+		}
+		v4318w={
+			v4340w(v4344w.X)..','..v4340w(v4344w.Y)..','..v4340w(v4344w.Z),
+			v4340w(v4345w.X)..','..v4340w(v4345w.Y)..','..v4340w(v4345w.Z),
+			v4340w(v4346w.X)..','..v4340w(v4346w.Y)..','..v4340w(v4346w.Z),
+			v4340w(v4347w.X)..','..v4340w(v4347w.Y)..','..v4340w(v4347w.Z),
+			v4340w(v4343w.WalkSpeed),
+			v4340w(v4343w.JumpPower),
+			v4340w(v4343w.JumpHeight),
+			v4340w(v4343w.Health),
+			v4348w,
+			tostring(math.floor(v4381w+.5)),
+			tostring(math.floor(v4382w+.5))
+		}
+		local v4350w=0
+		for v4351w,v4352w in ipairs(v4349w) do
+			local v4353w=v4317w[v4351w]
+			if v4353w then v4353w.Text=v4352w end
+			local v4354w=v4331w:GetTextSize(v4352w,15,Enum.Font.Code,Vector2.new(10000,10000))
+			if v4354w.X>v4350w then v4350w=v4354w.X end
+		end
+		v4310f.Size=UDim2.new(0,math.ceil(v4350w)+v4321w+10,0,200)
+	end
+	local v4355w=v1.LocalPlayer
+	if v4355w.Character then v4341w(v4355w.Character) end
+	v4334w=v4355w.CharacterAdded:Connect(v4341w)
+	v4338w()
+	local v4356w=0
+	v4336w=v4330w.RenderStepped:Connect(function(v4357w)
+		if v4357w>0 then v4381w=1/v4357w end
+		local v4383w=v4380w
+		if v4383w then
+			local v4384w,v4385w=pcall(function()return v4383w:GetValueString()end)
+			if v4384w and type(v4385w)=='string' then
+				local v4386w=tonumber(v4385w:match('([%d%.]+)'))
+				if v4386w then v4382w=v4386w end
+			end
+		end
+		v4356w=v4356w+v4357w
+		if v4356w<.1 then return end
+		v4356w=0
+		v4338w()
+	end)
+	local v4358w,v4359w,v4360w,v4361w=false,nil,nil,nil
+	local v4362w,v4363w,v4364w,v4365w
+	local v4366w=Vector2.new(v4310f.Position.X.Offset,v4310f.Position.Y.Offset)
+	local v4367w=v4366w
+	local v4368w=10
+	local v4369w
+	v4369w=v4330w.RenderStepped:Connect(function(v4370w)
+		local v4371w=1-math.exp(-v4368w*v4370w)
+		v4367w=v4367w+(v4366w-v4367w)*v4371w
+		v4310f.Position=UDim2.new(0,v4367w.X,0,v4367w.Y)
+	end)
+	v4362w=v4310f.InputBegan:Connect(function(v4370w)
+		if v4370w.UserInputType==Enum.UserInputType.MouseButton1 or v4370w.UserInputType==Enum.UserInputType.Touch then
+			v4358w=true
+			v4359w=v4370w.Position
+			v4360w=Vector2.new(v4310f.Position.X.Offset,v4310f.Position.Y.Offset)
+			v4366w=v4360w
+			v4367w=v4360w
+			v4370w.Changed:Connect(function()if v4370w.UserInputState==Enum.UserInputState.End then v4358w=false end end)
+		end
+	end)
+	v4363w=v4310f.InputChanged:Connect(function(v4370w)
+		if v4370w.UserInputType==Enum.UserInputType.MouseMovement or v4370w.UserInputType==Enum.UserInputType.Touch then v4361w=v4370w end
+	end)
+	v4364w=v2.InputChanged:Connect(function(v4370w)
+		if not v4358w then return end
+		if v4361w and v4370w==v4361w then
+			local v4371w=v4370w.Position-v4359w
+			local v4372w=workspace.CurrentCamera.ViewportSize
+			local v4373w=v4310f.AbsoluteSize
+			local v4374w=v4360w.X+v4371w.X
+			local v4375w=v4360w.Y+v4371w.Y
+			local v4376w=1
+			local v4377w=v4372w.X-v4373w.X-v4376w
+			if v4377w<v4376w then v4377w=v4376w end
+			if v4374w<v4376w then v4374w=v4376w elseif v4374w>v4377w then v4374w=v4377w end
+			local v4378w=v4376w
+			local v4379w=v4372w.Y-v4373w.Y-v4376w
+			if v4379w<v4378w then v4379w=v4378w end
+			if v4375w<v4378w then v4375w=v4378w elseif v4375w>v4379w then v4375w=v4379w end
+			v4366w=Vector2.new(v4374w,v4375w)
+		end
+	end)
+	v4310={v4362w,v4363w,v4364w,v4369w,v4334w,v4335w,v4336w}
+	v4311=v4314
+end)
+
+local v430,v431=CreateGroup(v105,'ESP')
+local v432=0
+local function v433()v432=v432+1 return v432%2==1 and v430 or v431 end
+
+local v434,v435,v436={},nil,nil
+local v437,v438,v439=CreateToggle(v433(),'ESP',nil,function(v440)
+	if v435 then v435:Disconnect()v435=nil end
+	if v436 then
+		for v441,v442 in pairs(v436) do
+			local v443=v442
+			if v443 then
+				if v443[10] then pcall(function()v443[10]:Disconnect()end) end
+				if v443[1] then pcall(function()v443[1]:Destroy()end) end
+			end
+			v436[v441]=nil
+		end
+	end
+	v436=nil
+	if not v440 then return end
+	v436={}
+	local function v441(v442)
+		local v443={}
+		v436[v442]=v443
+		v443[10]=v442.CharacterAdded:Connect(function()v443[1],v443[2],v443[6],v443[7],v443[9]=nil,nil,nil,nil,nil end)
+	end
+	for _,v442 in ipairs(v1:GetPlayers()) do if v442~=v7 then v441(v442) end end
+	v5[#v5+1]=v1.PlayerAdded:Connect(function(v442) if v442~=v7 and v436 then v441(v442) end end)
+	v5[#v5+1]=v1.PlayerRemoving:Connect(function(v442)
+		local v443=v436 and v436[v442]
+		if v443 then
+			if v443[10] then pcall(function()v443[10]:Disconnect()end) end
+			if v443[1] then pcall(function()v443[1]:Destroy()end) end
+			v436[v442]=nil
+		end
+	end)
+	v435=v4.RenderStepped:Connect(function()
+		if v6 or not v436 then return end
+		for v442,v443 in pairs(v436) do
+			local v444=v442.Character
+			if not v444 then
+				if v443[1] then v443[1]:Destroy() v443[1]=nil end
+				v443[2],v443[6],v443[7],v443[9]=nil,nil,nil,nil
+			else
+				local v445=v443[2]
+				if not v445 or not v445.Parent then
+					v445=nil
+					for _,v446 in ipairs(v444:GetChildren()) do
+					local v447=v446.Name
+					if v447=='HumanoidRootPart' then v445=v446 break
+					elseif (not v445) and v447=='Torso' then v445=v446
+					elseif (not v445) and v447=='Head' then v445=v446 end
+				end
+					v443[2]=v445
+				end
+				local v447=v443[6]
+				if not v447 or not v447.Parent then
+					v447=nil
+					for _,v446 in ipairs(v444:GetChildren()) do if v446.Name=='Humanoid' then v447=v446 break end end
+					v443[6]=v447
+				end
+				local v448,v449,v450=v443[1],v443[9],v443[7]
+				if v445 then
+					if not v448 or not v448.Parent or v448.Parent~=v445 or v448.Adornee~=v445 or not v449 or not v449.Parent or not v450 or not v450.Parent then
+						if v448 then v448:Destroy() end
+						local v451=Instance.new('BillboardGui')
+						v451.Adornee=v445
+						v451.Parent=v445
+						v451.AlwaysOnTop=true
+						v451.Size=UDim2.new(0,150,0,40)
+						v451.StudsOffsetWorldSpace=Vector3.new(0,4)
+						local v452=Instance.new('Frame')
+						v452.Parent=v451
+						v452.Size=UDim2.new(1,0,1)
+						v452.Position=UDim2.new(0.5,0,1)
+						v452.AnchorPoint=Vector2.new(0.5,1)
+						v452.BackgroundColor3=Color3.new(0.15,0.15,0.15)
+						local v453=Instance.new('UIStroke')
+						v453.Parent=v452
+						v453.Thickness=1
+						v453.Color=Color3.new(1,1,1)
+						local v454=Instance.new('UICorner')
+						v454.Parent=v452
+						v454.CornerRadius=UDim.new(0,10)
+						local v455=Instance.new('TextLabel')
+						v455.Parent=v452
+						v455.BackgroundTransparency=1
+						v455.Font=Enum.Font.Code
+						v455.TextColor3=Color3.new(1,1,1)
+						v455.TextSize=15
+						v455.TextXAlignment=Enum.TextXAlignment.Left
+						v455.TextYAlignment=Enum.TextYAlignment.Top
+						v455.TextWrapped=true
+						v455.Position=UDim2.new(0,6,0,4)
+						v455.Size=UDim2.new(1,-34,1,-8)
+						local v456=Instance.new('Frame')
+						v456.Parent=v452
+						v456.Size=UDim2.new(0,16,0,16)
+						v456.Position=UDim2.new(1,-22,0,6)
+						local v457=Instance.new('UICorner')
+						v457.Parent=v456
+						v457.CornerRadius=UDim.new(1,0)
+						local v458=Instance.new('UIStroke')
+						v458.Parent=v456
+						v458.Thickness=1
+						v458.Color=Color3.new(1,1,1)
+						v443[1],v443[9],v443[7]=v451,v455,v456
+						v448,v449,v450=v451,v455,v456
+					end
+					v448.Adornee=v445
+					v448.Parent=v445
+					v448.AlwaysOnTop=true
+					v448.Size=UDim2.new(0,150,0,40)
+					v448.StudsOffsetWorldSpace=Vector3.new(0,4)
+					v449.Font=Enum.Font.Code
+					v449.TextColor3=Color3.new(1,1,1)
+					v449.TextSize=15
+					v449.TextXAlignment=Enum.TextXAlignment.Left
+					v449.TextYAlignment=Enum.TextYAlignment.Top
+					v449.TextWrapped=true
+					v449.Position=UDim2.new(0,6,0,4)
+					v449.Size=UDim2.new(1,-34,1,-8)
+					v449.Text=v442.DisplayName..string.char(10)..v442.Name
+					local v459=0
+					if v447 then
+						local v460=v447.MaxHealth
+						if v460>0 then v459=v447.Health/v460 end
+					end
+					if v459<0 then v459=0 elseif v459>1 then v459=1 end
+					v450.BackgroundColor3=Color3.new(v459,v459,v459)
+				end
+			end
+		end
+	end)
+	v5[#v5+1]=v435
+end)
+
+local v460,v461,v462=CreateToggle(v433(),'Mini ESP',nil,function(v463)
+	if v461 then v461:Disconnect()v461=nil end
+	if v462 then
+		for v464,v465 in pairs(v462) do
+			if v465 and v465[4] then pcall(function()v465[4]:Disconnect()end) end
+			if v465 and v465[1] then pcall(function()v465[1]:Destroy()end) end
+			v462[v464]=nil
+		end
+	end
+	v462=nil
+	if not v463 then return end
+	v462={}
+	local function v464(v465)
+		local v466={}
+		v462[v465]=v466
+		v466[4]=v465.CharacterAdded:Connect(function()v466[1],v466[2],v466[3],v466[5]=nil,nil,nil,nil end)
+	end
+	for _,v465 in ipairs(v1:GetPlayers()) do if v465~=v7 then v464(v465) end end
+	v5[#v5+1]=v1.PlayerAdded:Connect(function(v465) if v465~=v7 and v462 then v464(v465) end end)
+	v5[#v5+1]=v1.PlayerRemoving:Connect(function(v465)
+		local v466=v462 and v462[v465]
+		if v466 then
+			if v466[4] then pcall(function()v466[4]:Disconnect()end) end
+			if v466[1] then pcall(function()v466[1]:Destroy()end) end
+			v462[v465]=nil
+		end
+	end)
+	v461=v4.RenderStepped:Connect(function()
+		if v6 or not v462 then return end
+		for v465,v466 in pairs(v462) do
+			local v467=v465.Character
+			if not v467 then
+				if v466[1] then v466[1]:Destroy() v466[1]=nil end
+				v466[2],v466[3],v466[5]=nil,nil,nil
+			else
+				local v468=v466[2]
+				if not v468 or not v468.Parent then
+					v468=nil
+					for _,v469 in ipairs(v467:GetChildren()) do
+					local v470=v469.Name
+					if v470=='HumanoidRootPart' then v468=v469 break
+					elseif (not v468) and v470=='Torso' then v468=v469
+					elseif (not v468) and v470=='Head' then v468=v469 end
+				end
+					v466[2]=v468
+				end
+				local v470,v471,v472=v466[1],v466[3],v466[5]
+				if v468 then
+					if not v470 or not v470.Parent or v470.Parent~=v468 or v470.Adornee~=v468 or not v471 or not v471.Parent or not v472 or not v472.Parent then
+						if v470 then v470:Destroy() end
+						local v473=Instance.new('BillboardGui')
+						v473.Adornee=v468
+						v473.Parent=v468
+						v473.AlwaysOnTop=true
+						v473.Size=UDim2.new(0,160,0,30)
+						v473.StudsOffsetWorldSpace=Vector3.new(0,4)
+						local v474=Instance.new('TextLabel')
+						v474.Parent=v473
+						v474.Size=UDim2.new(1,0,1)
+						v474.BackgroundTransparency=1
+						v474.Font=Enum.Font.Code
+						v474.TextColor3=Color3.new(1,1,1)
+						v474.TextSize=22
+						v474.TextXAlignment=Enum.TextXAlignment.Center
+						v474.TextYAlignment=Enum.TextYAlignment.Center
+						local v475=Instance.new('UIStroke')
+						v475.Parent=v474
+						v475.Thickness=1
+						v475.Color=Color3.new(0,0,0)
+						v466[1],v466[3],v466[5]=v473,v474,v475
+						v470,v471,v472=v473,v474,v475
+					end
+					v470.Adornee=v468
+					v470.Parent=v468
+					v470.AlwaysOnTop=true
+					v470.Size=UDim2.new(0,160,0,30)
+					v470.StudsOffsetWorldSpace=Vector3.new(0,4)
+					v471.Size=UDim2.new(1,0,1)
+					v471.BackgroundTransparency=1
+					v471.Font=Enum.Font.Code
+					local v476a=v465.TeamColor
+					v471.TextColor3=v476a and v476a.Color or Color3.new(1,1,1)
+					v471.TextSize=22
+					v471.TextXAlignment=Enum.TextXAlignment.Center
+					v471.TextYAlignment=Enum.TextYAlignment.Center
+					v471.Text=v465.Name
+					if not v472 or not v472.Parent or v472.Parent~=v471 then
+						v472=nil
+						for _,v473 in ipairs(v471:GetChildren()) do if v473.ClassName=='UIStroke' then v472=v473 break end end
+						if not v472 then v472=Instance.new('UIStroke') v472.Parent=v471 end
+						v466[5]=v472
+					end
+					v472.Thickness=1
+					v472.Color=Color3.new(0,0,0)
+				end
+			end
+		end
+	end)
+	v5[#v5+1]=v461
+end)
+
+local v476,v477,v478=CreateToggle(v433(),'HighLight',nil,function(v479a)
+	if v480 then v480:Disconnect()v480=nil end
+	if v479 then
+		for v481,v482 in pairs(v479) do
+			if v482 then
+				if v482[2] then pcall(function()v482[2]:Disconnect()end) end
+				if v482[3] then for v483,v484 in pairs(v482[3]) do if v483 and v483.Parent then v483.Transparency=v484 end end v482[3]=nil end
+				if v482[1] then pcall(function()v482[1]:Destroy()end) end
+			end
+			v479[v481]=nil
+		end
+	end
+	v479=nil
+	if not v479a then return end
+	v479={}
+	local function v481(v482)
+		local v483={}
+		v479[v482]=v483
+		v483[2]=v482.CharacterAdded:Connect(function()
+			if v483[3] then
+				for v484,v485 in pairs(v483[3]) do if v484 and v484.Parent then v484.Transparency=v485 end end
+				v483[3]=nil
+			end
+			if v483[1] then pcall(function()v483[1]:Destroy()end) end
+			v483[1]=nil
+		end)
+	end
+	for _,v482 in ipairs(v1:GetPlayers()) do if v482~=v7 then v481(v482) end end
+	v5[#v5+1]=v1.PlayerAdded:Connect(function(v482) if v482~=v7 and v479 then v481(v482) end end)
+	v5[#v5+1]=v1.PlayerRemoving:Connect(function(v482)
+		local v483=v479 and v479[v482]
+		if v483 then
+			if v483[2] then pcall(function()v483[2]:Disconnect()end) end
+			if v483[3] then for v484,v485 in pairs(v483[3]) do if v484 and v484.Parent then v484.Transparency=v485 end end v483[3]=nil end
+			if v483[1] then pcall(function()v483[1]:Destroy()end) end
+			v479[v482]=nil
+		end
+	end)
+	v480=v4.RenderStepped:Connect(function()
+		if v6 or not v479 then return end
+		for v482,v483 in pairs(v479) do
+			local v484=v482.Character
+			if not v484 then
+				if v483[3] then for v484,v485 in pairs(v483[3]) do if v484 and v484.Parent then v484.Transparency=v485 end end v483[3]=nil end
+				if v483[1] then v483[1]:Destroy() v483[1]=nil end
+			else
+				local v485=v483[1]
+				if (not v485) or (not v485.Parent) or v485.Adornee~=v484 then
+					if v485 then pcall(function()v485:Destroy()end) end
+					v485=Instance.new('Highlight')
+					v485.Parent=workspace
+					v483[1]=v485
+					v483[3]={}
+					for _,v486 in ipairs(v484:GetDescendants()) do
+						if v486:IsA('BasePart') and v486.Transparency==1 then v483[3][v486]=1 v486.Transparency=.99 end
+					end
+				end
+				v485.Adornee=v484
+				v485.FillColor=Color3.new(1,0,0)
+				v485.FillTransparency=.8
+				v485.OutlineTransparency=1
+			end
+		end
+	end)
+	v5[#v5+1]=v480
+end)
+local v479,v480=nil,nil
+
+local function v334(v335)
+	return tostring(math.floor(v335*100+0.5)/100)
+end
+
+local v335,v336=CreateGroup(v105,'WalkSpeed')
+local v337=0
+local function v338()
+	v337=v337+1
+	return v337%2==1 and v335 or v336
+end
+local v339=v334((v73 and v73.WalkSpeed) or 16)
+local v340,v341=CreateInput(v338(),'Value',function(v342)v339=v342 end,nil,v339)
+v341:GetPropertyChangedSignal('Text'):Connect(function()v339=v341.Text end)
+CreateButton(v338(),'Set',function()
+	local v342=tonumber(v339)
+	if v342 and v73 then v73.WalkSpeed=v342 end
+end)
+local v343=nil
+CreateToggle(v338(),'Loop Set',nil,function(v342)
+	if v343 then v343:Disconnect()v343=nil end
+	if v342 then
+		v343=v4.RenderStepped:Connect(function()
+			if v6 then return end
+			local v344=tonumber(v339)
+			if v344 and v73 then v73.WalkSpeed=v344 end
+		end)
+		v5[#v5+1]=v343
+	end
+end)
+local v420=CreateDisplay(v338(),'Current: 0')
+local v426=50
+CreateToggle(v338(),'TP Walk',function(v342)
+	if v6 then return end
+	local v343,v344=v73,v74
+	if not v343 or not v344 or not v344.Parent then return end
+	local v345=v343.MoveDirection
+	if v345.Magnitude<.001 then return end
+	local v346=v344.CFrame
+	v344.CFrame=CFrame.new(v346.p+v345.Unit*v426*v342)*(v346-v346.p)
+end)
+CreateInput(v338(),'Speed',function(v342)local v343=tonumber(v342)if v343 then v426=v343 end end,nil,'50')
+
+local v345,v346=CreateGroup(v105,'JumpPower')
+local v347=0
+local function v348()
+	v347=v347+1
+	return v347%2==1 and v345 or v346
+end
+local v349=v334((v73 and v73.JumpPower) or 50)
+local v350,v351=CreateInput(v348(),'Value',function(v352)v349=v352 end,nil,v349)
+v351:GetPropertyChangedSignal('Text'):Connect(function()v349=v351.Text end)
+CreateButton(v348(),'Set',function()
+	local v352=tonumber(v349)
+	if v73 and v352 then pcall(function()v73.UseJumpPower=true end)pcall(function()v73.JumpPower=v352 end)end
+end)
+local v353=nil
+CreateToggle(v348(),'Loop Set',nil,function(v352)
+	if v353 then v353:Disconnect()v353=nil end
+	if v352 then
+		v353=v4.RenderStepped:Connect(function()
+			if v6 then return end
+			local v354=tonumber(v349)
+			if v73 and v354 then pcall(function()v73.UseJumpPower=true end)pcall(function()v73.JumpPower=v354 end)end
+		end)
+		v5[#v5+1]=v353
+	end
+end)
+local v421=CreateDisplay(v348(),'Current: 0')
+
+
+local v355,v356=CreateGroup(v105,'Gravity')
+local v357=0
+local function v358()
+	v357=v357+1
+	return v357%2==1 and v355 or v356
+end
+local v359=v334(workspace.Gravity)
+local v360,v361=CreateInput(v358(),'Value',function(v362)v359=v362 end,nil,v359)
+v361:GetPropertyChangedSignal('Text'):Connect(function()v359=v361.Text end)
+CreateButton(v358(),'Set',function()
+	local v362=tonumber(v359)
+	if v362 then workspace.Gravity=v362 end
+end)
+local v363=nil
+CreateToggle(v358(),'Loop Set',nil,function(v362)
+	if v363 then v363:Disconnect()v363=nil end
+	if v362 then
+		v363=v4.RenderStepped:Connect(function()
+			if v6 then return end
+			local v364=tonumber(v359)
+			if v364 then workspace.Gravity=v364 end
+		end)
+		v5[#v5+1]=v363
+	end
+end)
+local v422=CreateDisplay(v358(),'Current: 0')
+
+local v395,v396=CreateGroup(v105,'FOV')
+local v397=0
+local function v398()
+	v397=v397+1
+	return v397%2==1 and v395 or v396
+end
+local v399=v334((workspace.CurrentCamera and workspace.CurrentCamera.FieldOfView) or 70)
+local v400,v401=CreateInput(v398(),'Value',function(v402)v399=v402 end,nil,v399)
+v401:GetPropertyChangedSignal('Text'):Connect(function()v399=v401.Text end)
+CreateButton(v398(),'Set',function()
+	local v402=tonumber(v399)
+	if v402 then
+		local v403=workspace.CurrentCamera
+		if v403 then v403.FieldOfView=v402 end
+	end
+end)
+local v404=nil
+CreateToggle(v398(),'Loop Set',nil,function(v402)
+	if v404 then v404:Disconnect()v404=nil end
+	if v402 then
+		v404=v4.RenderStepped:Connect(function()
+			if v6 then return end
+			local v405=tonumber(v399)
+			if v405 then
+				local v406=workspace.CurrentCamera
+				if v406 then v406.FieldOfView=v405 end
+			end
+		end)
+		v5[#v5+1]=v404
+	end
+end)
+local v423=CreateDisplay(v398(),'Current: 0')
+
+local v365,v366=CreateGroup(v105,'MaxZoom')
+local v367=0
+local function v368()
+	v367=v367+1
+	return v367%2==1 and v365 or v366
+end
+local v369=v334(v7.CameraMaxZoomDistance)
+local v370,v371=CreateInput(v368(),'Value',function(v372)v369=v372 end,nil,v369)
+v371:GetPropertyChangedSignal('Text'):Connect(function()v369=v371.Text end)
+CreateButton(v368(),'Set',function()
+	local v372=tonumber(v369)
+	if v372 then v7.CameraMaxZoomDistance=v372 end
+end)
+local v373,v374,v375=CreateToggle(v368(),'No MaxZoom')
+local v376=nil
+local function v377(v378)
+	if v376 then v376:Disconnect()v376=nil end
+	if v378 then
+		v376=v4.RenderStepped:Connect(function()
+			if v6 then return end
+			if v375() then v7.CameraMaxZoomDistance=1/0 else
+				local v379=tonumber(v369)
+				if v379 then v7.CameraMaxZoomDistance=v379 end
+			end
+		end)
+		v5[#v5+1]=v376
+	end
+end
+CreateToggle(v368(),'Loop Set',nil,function(v378)v377(v378 or v375())end)
+v374(false)
+v373.MouseButton1Click:Connect(function()task.defer(function()v377(v375() or false)end)end)
+local v424=CreateDisplay(v368(),'Current: 0')
+
+local v380,v381=CreateGroup(v105,'MinZoom')
+local v382=0
+local function v383()
+	v382=v382+1
+	return v382%2==1 and v380 or v381
+end
+local v384=v334(v7.CameraMinZoomDistance)
+local v385,v386=CreateInput(v383(),'Value',function(v387)v384=v387 end,nil,v384)
+v386.Text=v384
+v386:GetPropertyChangedSignal('Text'):Connect(function()v384=v386.Text end)
+CreateButton(v383(),'Set',function()
+	local v387=tonumber(v384)
+	if v387 then v7.CameraMinZoomDistance=v387 end
+end)
+local v388,v389,v390=CreateToggle(v383(),'No MinZoom')
+local v391=nil
+local function v392(v393)
+	if v391 then v391:Disconnect()v391=nil end
+	if v393 then
+		v391=v4.RenderStepped:Connect(function()
+			if v6 then return end
+			if v390() then v7.CameraMinZoomDistance=-1/0 else
+				local v394=tonumber(v384)
+				if v394 then v7.CameraMinZoomDistance=v394 end
+			end
+		end)
+		v5[#v5+1]=v391
+	end
+end
+CreateToggle(v383(),'Loop Set',nil,function(v393)v392(v393 or v390())end)
+v389(false)
+v388.MouseButton1Click:Connect(function()task.defer(function()v392(v390() or false)end)end)
+local v425=CreateDisplay(v383(),'Current: 0')
+
+v5[#v5+1]=v4.RenderStepped:Connect(function()
+	if v6 then return end
+	if v420 then v420.Text=v19('Current')..': '..v334((v73 and v73.WalkSpeed) or 0) end
+	if v421 then v421.Text=v19('Current')..': '..v334((v73 and v73.JumpPower) or 0) end
+	if v422 then v422.Text=v19('Current')..': '..v334(workspace.Gravity) end
+	if v423 then v423.Text=v19('Current')..': '..v334((workspace.CurrentCamera and workspace.CurrentCamera.FieldOfView) or 0) end
+	if v424 then v424.Text=v19('Current')..': '..v334(v7.CameraMaxZoomDistance) end
+	if v425 then v425.Text=v19('Current')..': '..v334(v7.CameraMinZoomDistance) end
+end)
+
+end
+v333()
+
+local function v334()
+if v713 then v713(.72,'Creating Group.Desync...') end
+	local v335,v336=CreateGroup(v105,'Desync')
+	local v337=0
+	local function v338()
+		v337=v337+1
+		return v337%2==1 and v335 or v336
+	end
+	local v339={}
+	local v340,v341,v342,v343=nil,nil,false,nil
+	local v344,v345,v346=nil,nil,nil
+	local v347,v348,v349=0,0,0
+	local v350,v351,v352=0,0,0
+	local v372,v373,v374=0,0,0
+	local v356,v357=nil,nil
+	local v378a,v379a,v380a=0,0,0
+	local v381a,v382a,v383a=0,0,0
+	local v384a,v385a,v386a,v387a=nil,nil,nil,nil
+	local v388a,v389a,v390a,v391a=nil,nil,nil,nil
+	local v392a=false
+	local v393a=false
+	local function v353()
+		local v358=v344
+		local v358a=v341
+		if v340 then v340:Disconnect()v340=nil end
+		pcall(function()v4:UnbindFromRenderStep('v6')end)pcall(function()v4:UnbindFromRenderStep('v7')end)
+		if v358 then
+			local v359=v74
+			if v359 and v359.Parent and v341 then
+				if v358==3 or v358==4 then
+				v359.CFrame=v341
+			else
+				if v345 and v346 then v359.CFrame=v341 v359.Velocity=v345 v359.RotVelocity=v346 end
+			end
+			end
+		end
+		v341=nil v345=nil v346=nil
+		v722=nil
+		v342=false
+		v344=nil
+		if v356 then pcall(function()v356:Destroy()end)v356=nil end
+		v357=nil
+	end
+	v720=v353
+	v721=function()
+		if v722 then return v722 end
+		local v358=v344
+		if v358 and v341 then return v341 end
+		local v359=v74
+		if v359 and v359.Parent then return v359.CFrame end
+		return nil
+	end
+	v723=function(v358)
+		if not v358 then return end
+		v722=v358
+		if v344==1 then
+			v343=v358
+		elseif v344==2 then
+			local v359=v358.p
+			v347,v348,v349=v359.X,v359.Y,v359.Z
+		end
+		v341=v358
+		local v359=v74
+		if v359 and v359.Parent then v359.CFrame=v358 end
+		if v356 then v356.CFrame=v358 end
+	end
+	v724=function(v358)
+		if not v358 then return end
+		v722=v358
+		v341=v358
+		local v359=v74
+		if v359 and v359.Parent then v359.CFrame=v358 end
+	end
+	local function v354(v355)
+		v341=nil v345=nil v346=nil
+		v344=v355
+		if not v355 then return end
+		v722=nil
+		if not v356 then
+			v356=Instance.new('Part',workspace)
+			v356.Size=Vector3.new(2.02,2.02,1.01)
+			v356.Color=Color3.new(1,0,0)
+			v356.Material=Enum.Material.Neon
+			v356.Transparency=.5
+			v356.CanCollide=false
+			v356.CanQuery=false
+			v356.CanTouch=false
+			v356.CastShadow=false
+			v356.Anchored=true
+		end
+		v340=v4.Heartbeat:Connect(function()
+			if v6 then return end
+			local v358=v74
+			if not v358 or not v358.Parent then return end
+			v341=v358.CFrame
+			v722=v341
+			if v344~=4 then v345=v358.Velocity v346=v358.RotVelocity else v345=nil v346=nil end
+			local v359
+			if v344==1 then
+				v359=v343
+			elseif v344==2 then
+				v359=CFrame.new(v347,v348,v349)
+			elseif v344==3 then
+				v359=CFrame.new(v341.p)*((v341-v341.p)*CFrame.Angles(math.rad(v350),math.rad(v351),math.rad(v352)))
+			else
+				v359=v341*CFrame.new(v372,v373,v374)
+			end
+			v357=v359
+			if v344==3 then
+				v358.CFrame=v359
+			else
+				v358.CFrame=v359
+				if v344~=4 then v358.Velocity=v707()v358.RotVelocity=Vector3.new() end
+			end
+			if v356 then v356.CFrame=v359 v356.Velocity=v707()v356.RotVelocity=Vector3.new() end
+			v342=true
+		end)
+		v4:BindToRenderStep('v6',Enum.RenderPriority.Camera.Value-1,function()
+			if not v342 then return end
+			v342=false
+			local v358=v74
+			if not v358 or not v358.Parent then return end
+			if v344==3 or v344==4 then
+				if v341 then v358.CFrame=v341 end
+			else
+				if v341 and v345 and v346 then v358.CFrame=v341 v358.Velocity=v345 v358.RotVelocity=v346 end
+			end
+		end)
+		v4:BindToRenderStep('v7',Enum.RenderPriority.Camera.Value+2,function()
+			if v6 then return end
+			local v358=v356
+			local v359=v357
+			if v358 and v359 then v358.CFrame=v359 v358.Velocity=v707()v358.RotVelocity=Vector3.new() end
+		end)
+		v5[#v5+1]=v340
+	end
+
+	local v358,v359,v360=CreateToggle(v338(),'Desync',nil,function(v361)
+		if v361 then
+			v353()
+			local v362=v74
+			if v362 and v362.Parent then v343=v362.CFrame else v343=CFrame.new() end
+			v354(1)
+		else
+			v353()
+		end
+	end,v339)
+
+	CreateToggle(v338(),'Desync Pos',nil,function(v367)
+		if v367 then v353()v354(2) else v353() end
+	end,v339)
+	local v363,v364,v365,v366=Create3Input(v338(),'Pos',function(v367,v368,v369)v347,v348,v349=v367,v368,v369 end,'0','0','0')
+	CreateButton(v338(),'Set Pos',function()
+		local v367a=v721 and v721() or nil
+		local v367=v74
+		if (not v367a) and ((not v367) or (not v367.Parent)) then return end
+		local v368=(v367a or v367.CFrame).p
+		local v369=math.floor(v368.X*10+0.5)/10
+		local v370=math.floor(v368.Y*10+0.5)/10
+		local v371=math.floor(v368.Z*10+0.5)/10
+		v347,v348,v349=v369,v370,v371
+		v364.Text=tostring(v369)
+		v365.Text=tostring(v370)
+		v366.Text=tostring(v371)
+	end)
+
+	CreateToggle(v338(),'Desync Rot',nil,function(v367)
+		if v367 then v353()v354(3) else v353() end
+	end,v339)
+	Create3Input(v338(),'Rot',function(v367,v368,v369)v350,v351,v352=v367,v368,v369 end,'0','0','0')
+
+	local v375,v376,v377=CreateToggle(v338(),'Desync Dif',nil,function(v367)
+		if v367 then v353()v354(4) else v353() end
+	end,v339)
+	Create3Input(v338(),'Dif',function(v367,v368,v369)v372,v373,v374=v367,v368,v369 end,'0','0','0')
+
+	local v394a,v395a,v396a=CreateToggle(v338(),'Desync Vel',nil,function(v397a)
+		if v384a then v384a:Disconnect()v384a=nil end
+		if v385a then v385a:Disconnect()v385a=nil end
+		v392a=false
+		local v398a=v74
+		if not v397a then
+			if v398a and v398a.Parent and v386a then v398a.Velocity=v386a end
+			v386a=nil v387a=nil
+			return
+		end
+		v353()
+		v392a=true
+		v384a=v4.Heartbeat:Connect(function()
+			if v6 then return end
+			local v398a=v74
+			if not v398a or not v398a.Parent then v392a=false return end
+			v386a=v398a.Velocity
+			v398a.Velocity=Vector3.new(v378a,v379a,v380a)
+			v393a=true
+		end)
+		v385a=v4.RenderStepped:Connect(function()
+			if not v392a or not v393a then return end
+			v393a=false
+			local v398a=v74
+			if not v398a or not v398a.Parent then v392a=false return end
+			if v386a then v398a.Velocity=v386a end
+		end)
+		v5[#v5+1]=v384a
+	v5[#v5+1]=v385a
+	end,v339)
+	Create3Input(v338(),'Vel',function(v397a,v398a,v399a)v378a,v379a,v380a=v397a,v398a,v399a end,'0','0','0')
+
+	local v397b,v398b,v399b=CreateToggle(v338(),'Desync RVel',nil,function(v400b)
+		if v388a then v388a:Disconnect()v388a=nil end
+		if v389a then v389a:Disconnect()v389a=nil end
+		v393a=false
+		local v401b=v74
+		if not v400b then
+			if v401b and v401b.Parent and v391a then v401b.RotVelocity=v391a end
+			v391a=nil v390a=nil
+			return
+		end
+		v353()
+		v393a=true
+		v388a=v4.Heartbeat:Connect(function()
+			if v6 then return end
+			local v401b=v74
+			if not v401b or not v401b.Parent then v393a=false return end
+			v391a=v401b.RotVelocity
+			v401b.RotVelocity=Vector3.new(v381a,v382a,v383a)
+			v392a=true
+		end)
+		v389a=v4.RenderStepped:Connect(function()
+			if not v393a or not v392a then return end
+			v392a=false
+			local v401b=v74
+			if not v401b or not v401b.Parent then v393a=false return end
+			if v391a then v401b.RotVelocity=v391a end
+		end)
+		v5[#v5+1]=v388a
+	v5[#v5+1]=v389a
+	end,v339)
+	Create3Input(v338(),'RVel',function(v400b,v401b,v402b)v381a,v382a,v383a=v400b,v401b,v402b end,'0','0','0')
+end
+v334()
+
+local function v335()
+if v713 then v713(.82,'Creating Group.Teleport...') end
+	local v336,v337=CreateGroup(v105,'Teleport')
+	local v338=0
+	local function v339()
+		v338=v338+1
+		return v338%2==1 and v336 or v337
+	end
+	local v340,v341,v342=0,0,0
+	CreateButton(v339(),'Teleport',function()
+		if v6 then return end
+		local v343a=v721 and v721() or nil
+		local v343=v74
+		if not v343 or not v343.Parent then
+			local v344a=v7.Character
+			if v344a then v343=v702(v344a) end
+			if not v343 then v343=v703() end
+		end
+		if not v343 or not v343.Parent then return end
+		local v344=v343a or v343.CFrame
+		local v345=CFrame.new(v340,v341,v342)*(v344-v344.p)
+		if v724 then v724(v345) else v343.CFrame=v345 end
+		v343.Velocity=v707()
+	end)
+	local v345,v346,v347,v348=Create3Input(v339(),'Pos',function(v349,v350,v351)v340,v341,v342=v349,v350,v351 end,'0','0','0')
+	CreateButton(v339(),'Set Pos',function()
+		local v349a=v721 and v721() or nil
+		local v349=v74
+		if (not v349a) and ((not v349) or (not v349.Parent)) then return end
+		local v350=(v349a or v349.CFrame).p
+		local v351=math.floor(v350.X*10+0.5)/10
+		local v352=math.floor(v350.Y*10+0.5)/10
+		local v353=math.floor(v350.Z*10+0.5)/10
+		v340,v341,v342=v351,v352,v353
+		v346.Text=tostring(v351)
+		v347.Text=tostring(v352)
+		v348.Text=tostring(v353)
+	end)
+end
+
+local function v336()
+if v713 then v713(.88,'Creating Group.Script...') end
+	local v337,v338=CreateGroup(v105,'Script')
+	local v339=0
+	local function v340()
+		v339=v339+1
+		return v339%2==1 and v337 or v338
+	end
+	CreateButton(v340(),'Load IY',function()pcall(function()loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()end)end)
+	CreateButton(v340(),'Load RSpy',function()pcall(function()loadstring(game:HttpGet('https://raw.githubusercontent.com/infyiff/backup/main/SimpleSpyV3/main.lua'))()end)end)
+	CreateButton(v340(),'Load Dex',function()pcall(function()loadstring(game:HttpGet('https://raw.githubusercontent.com/infyiff/backup/main/dex.lua'))()end)end)
+	CreateButton(v340(),'Load ShiftLock',function()pcall(function()loadstring(game:HttpGet('https://rawscripts.net/raw/Universal-Script-Shiftlock-script-42373'))()end)end)
+	CreateButton(v340(),'Unload',function()v12()end)
+	CreateSelect(v340(),'Language',v13,{'English','日本語'},function(v341)v13=v341 end)
+end
+
+local function v337()
+if v713 then v713(.9,'Creating Group.Config...') end
+	local v337a,v338a=CreateGroup(v105,'Config')
+	local v339a=0
+	local function v340a()
+		v339a=v339a+1
+		return v339a%2==1 and v337a or v338a
+	end
+	local v341a,v342a=CreateInput(v340a(),'Name',function(v343a)end)
+	local v344a,v344b={},{}
+	local v345a,v345b='',''
+	local function v346a()
+		for v347a=1,#v344a do v344a[v347a]=nil end
+		for v347a in pairs(v344b) do v344b[v347a]=nil end
+		for v347a in pairs(v24) do
+			local v348a=tostring(v347a)
+			local v349a=v348a..((v25==v348a) and ' (AutoLoad)' or '')
+			v344a[#v344a+1]=v349a
+			v344b[v349a]=v348a
+		end
+	end
+	v346a()
+	local v347a,v348a,v349a=CreateSelect(v340a(),'Config',v345b,v344a,function(v350a)
+		v345b=tostring(v350a or '')
+		v345a=v344b[v345b] or v345b
+	end)
+	local function v350a()
+		v346a()
+		if v345a~='' and (not v24[v345a]) then v345a='' v345b='' pcall(function()v349a('')end) end
+		if v345a~='' then v345b=v345a..((v25==v345a) and ' (AutoLoad)' or '') end
+		pcall(function()v349a(v345b)end)
+		v23()
+	end
+	CreateButton(v340a(),'Create Config',function()
+		local v351a=(v342a and v342a.Text or ''):match('^%s*(.-)%s*$')
+		if v351a=='' then return end
+		if v24[v351a] then return end
+		v24[v351a]=v30()
+		v345a=v351a
+		v345b=v351a..((v25==v351a) and ' (AutoLoad)' or '')
+		pcall(function()v349a(v345b)end)
+		v350a()
+	end)
+	CreateButton(v340a(),'Load Config',function()
+		if v345a=='' then return end
+		v29(v345a)
+		v21()
+	end)
+	CreateButton(v340a(),'OverWrite Config',function()
+		if v345a=='' then return end
+		if not v24[v345a] then return end
+		v24[v345a]=v30()
+		v350a()
+	end)
+	CreateButton(v340a(),'Delete Config',function()
+		if v345a=='' then return end
+		v24[v345a]=nil
+		if v25==v345a then v25=nil end
+		v345a='' v345b=''
+		pcall(function()v349a('')end)
+		v350a()
+	end)
+	CreateButton(v340a(),'Set AutoLoad',function()
+		if v345a=='' then return end
+		if not v24[v345a] then return end
+		v25=v345a
+		v350a()
+	end)
+end
+
+v335()
+v337()
+v336()
+if v713 then v713(.96) end
+if v25 and v24[v25] then v29(v25) end
+v21()
+if v713 then v713(.99) end
+end
+
+task.spawn(function()
+	if v6 then return end
+	v713(.04,'Booting Leme GUI v2.1...')
+	v713(.08,'Reading Leme GUI v2.1 Config.txt...')
+	v22()
+	v713(.22,'Creating Main GUI...')
+	v500()
+	v713(.94,'Applying AutoLoad Config...')
+	v713(.97,'Finalizing UI...')
+	v713(1,'Load Complete')
+	v710=true
+end)
+
+while v99a and not v6 do v4.RenderStepped:Wait() end
+pcall(function()v99c:Disconnect()end)
+
+local v99,v100,v101,v102,v102a,v102b=v3:Create(v93,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundTransparency=1}),v3:Create(v95,TweenInfo.new(.45,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Transparency=1}),v3:Create(v97,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{TextTransparency=1}),v3:Create(v94,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{TextTransparency=1}),v3:Create(v93b,TweenInfo.new(.45,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Transparency=1}),v3:Create(v93d,TweenInfo.new(.45,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Transparency=1})
+local v102c=v3:Create(v97a,TweenInfo.new(.45,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundTransparency=1})
+local v102d=v3:Create(v97b,TweenInfo.new(.45,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundTransparency=1})
+local v102e=v3:Create(v97e,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{TextTransparency=1})
+v99:Play()v100:Play()v101:Play()v102:Play()v102a:Play()v102b:Play()v102c:Play()v102d:Play()v102e:Play()v101.Completed:Wait()
+pcall(function()v93:Destroy()end)
+pcall(function()v97:Destroy()end)
+pcall(function()v97a:Destroy()end)
+pcall(function()v97e:Destroy()end)
+
+local v102=v3:Create(v91,TweenInfo.new(.55,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundTransparency=1})
+v102:Play()
+v102.Completed:Wait()
+pcall(function()v10:Destroy()end)
+v10=nil
+if v6 then return end
+
+task.wait(.15)
+
+local v221,v222,v223=0,false,false
+local v224,v225=v3:Create(v103,TweenInfo.new(.5,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Position=UDim2.new(.5,0,1,-55)}),v3:Create(v104,TweenInfo.new(.5,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Position=UDim2.new(.5,0,1,259)})
+v223=true
+v224:Play()v225:Play()v224.Completed:Wait()v223=false
+
+v5[#v5+1]=v4.RenderStepped:Connect(function(v226)
+	if v6 or v223 then return end
+	local v227=workspace.CurrentCamera
+	if v227 then
+		local v228=v227.ViewportSize.X
+		local v229=v104.AbsoluteSize.X
+		local v230=(v228-v229)*.5-1
+		if v230<0 then v230=0 end
+		if v221>v230 then v221=v230 elseif v221<-v230 then v221=-v230 end
+	end
+	local v231=1-math.exp(-v226*25)
+	local v232=v222 and -315 or -55
+	v103.Position=v103.Position:Lerp(UDim2.new(.5,v221,1,v232),v231)
+	v104.Position=v104.Position:Lerp(UDim2.new(.5,v221,1,v222 and -1 or 259),v231)
+end)
+
+local v233,v234,v235,v236
+v5[#v5+1]=v103.InputBegan:Connect(function(v237)
+	if v6 then return end
+	if v237.UserInputType~=Enum.UserInputType.MouseButton1 and v237.UserInputType~=Enum.UserInputType.Touch then return end
+	v223=false
+	v235=false
+	v234=v221
+	v236=v237.Position.X
+	v233=v237
+end)
+
+v5[#v5+1]=v2.InputChanged:Connect(function(v238)
+	if v6 or v223 or not v233 then return end
+	if (v233.UserInputType==Enum.UserInputType.MouseButton1 and v238.UserInputType==Enum.UserInputType.MouseMovement) or v238==v233 then
+		local v239=v238.Position.X-v236
+		if not v235 and (v239>6 or v239<-6) then v235=true end
+		v221=v234+v239
+		local v240=workspace.CurrentCamera
+		if v240 then
+			local v241=v240.ViewportSize.X
+			local v242=v104.AbsoluteSize.X
+			local v243=(v241-v242)*.5-1
+			if v243<0 then v243=0 end
+			if v221>v243 then v221=v243 elseif v221<-v243 then v221=-v243 end
+		end
+	end
+end)
+
+v5[#v5+1]=v2.InputEnded:Connect(function(v244)
+	if v6 or not v233 then return end
+	if v244==v233 or (v233.UserInputType==Enum.UserInputType.MouseButton1 and v244.UserInputType==Enum.UserInputType.MouseButton1) then
+		v233=nil
+		if v235 then return end
+		v222=not v222
+		v223=true
+		if v10 then pcall(function()v10:Cancel()end) end
+		local v245=v221
+		local v246=v3:Create(v103,TweenInfo.new(.5,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Position=UDim2.new(.5,v245,1,v222 and -315 or -55)})
+		local v247=v3:Create(v104,TweenInfo.new(.5,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Position=UDim2.new(.5,v245,1,v222 and -1 or 259)})
+		v10=v246
+		v246.Completed:Connect(function()v223=false end)
+		v246:Play()v247:Play()
+	end
+end)
