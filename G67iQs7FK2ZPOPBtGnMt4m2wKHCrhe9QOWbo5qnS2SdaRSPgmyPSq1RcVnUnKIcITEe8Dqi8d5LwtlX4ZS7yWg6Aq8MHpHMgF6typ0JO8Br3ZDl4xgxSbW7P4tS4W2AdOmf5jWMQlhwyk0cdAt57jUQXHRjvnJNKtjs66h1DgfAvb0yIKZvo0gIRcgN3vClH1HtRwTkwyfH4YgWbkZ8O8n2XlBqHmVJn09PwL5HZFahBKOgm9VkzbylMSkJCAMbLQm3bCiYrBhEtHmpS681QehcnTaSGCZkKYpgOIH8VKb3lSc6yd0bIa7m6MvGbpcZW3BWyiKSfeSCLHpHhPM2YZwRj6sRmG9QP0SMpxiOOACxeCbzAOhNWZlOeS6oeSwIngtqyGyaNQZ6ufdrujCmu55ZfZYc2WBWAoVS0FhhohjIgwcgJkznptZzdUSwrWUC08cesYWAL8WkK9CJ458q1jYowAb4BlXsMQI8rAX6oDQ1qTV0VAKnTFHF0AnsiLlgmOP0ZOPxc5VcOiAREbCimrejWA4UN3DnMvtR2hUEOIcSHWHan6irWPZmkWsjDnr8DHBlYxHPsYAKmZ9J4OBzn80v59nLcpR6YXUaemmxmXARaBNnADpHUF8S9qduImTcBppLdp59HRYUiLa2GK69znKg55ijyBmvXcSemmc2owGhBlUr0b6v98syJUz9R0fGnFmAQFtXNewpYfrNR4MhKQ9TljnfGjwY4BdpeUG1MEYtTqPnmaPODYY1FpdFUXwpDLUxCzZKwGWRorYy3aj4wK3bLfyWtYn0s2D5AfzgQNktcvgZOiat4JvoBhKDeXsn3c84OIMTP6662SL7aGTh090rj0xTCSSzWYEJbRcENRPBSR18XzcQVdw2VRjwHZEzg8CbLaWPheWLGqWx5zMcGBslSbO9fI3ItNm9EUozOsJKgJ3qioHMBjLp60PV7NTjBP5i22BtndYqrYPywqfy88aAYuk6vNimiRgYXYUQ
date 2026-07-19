@@ -1934,16 +1934,54 @@ CreateButton(v304(),'Rejoin',function()
 	v1:Teleport(game.PlaceId,v2)
 end)
 
-local v305,v306,v307=CreateToggle(v304(),'Chat')
-v306(true)
+local v305=0
+local v306=CreateButton(v304(),'Chat: '..v19('NONE'))
 local v308=game:service'TextChatService'
+local v309,v310a,v311a,v312a,v313a=false,nil,nil,nil,nil
+local function v307(v308a,v309a)
+	if v309a then
+		v306.Text=v19('Chat')..': '..v19(v305==0 and 'NONE' or (v305==1 and 'OFF' or 'ON'))
+		return
+	end
+	local v314a=v305
+	if v308a==nil then
+		v305=v305+1
+		if v305>2 then v305=0 end
+	elseif v308a=='NONE' or v308a==0 then
+		v305=0
+	elseif v308a=='OFF' or v308a==1 or v308a==false then
+		v305=1
+	else
+		v305=2
+	end
+	if v314a==0 and v305~=0 then
+		v309=true
+		pcall(function()v310a=game:service'StarterGui':GetCoreGuiEnabled(Enum.CoreGuiType.Chat)end)
+		pcall(function()v311a=v308.BubbleChatConfiguration.Enabled end)
+		pcall(function()v312a=v308.ChatInputBarConfiguration.Enabled end)
+		pcall(function()v313a=v308.ChatWindowConfiguration.Enabled end)
+	elseif v314a~=0 and v305==0 and v309 then
+		if v310a~=nil then pcall(function()game:service'StarterGui':SetCoreGuiEnabled(Enum.CoreGuiType.Chat,v310a)end) end
+		if v311a~=nil then pcall(function()v308.BubbleChatConfiguration.Enabled=v311a end) end
+		if v312a~=nil then pcall(function()v308.ChatInputBarConfiguration.Enabled=v312a end) end
+		if v313a~=nil then pcall(function()v308.ChatWindowConfiguration.Enabled=v313a end) end
+		v309=false
+		v310a,v311a,v312a,v313a=nil,nil,nil,nil
+	end
+	v306.Text=v19('Chat')..': '..v19(v305==0 and 'NONE' or (v305==1 and 'OFF' or 'ON'))
+end
+v306.MouseButton1Click:Connect(function()v307()end)
+v20(v306,function()v307(nil,true)end)
+v28a('Select','Chat',function()return v305==0 and 'NONE' or (v305==1 and 'OFF' or 'ON') end,v307)
+v307('NONE')
 v5[#v5+1]=v4.RenderStepped:Connect(function()
 	if v6 then return end
-	local v309=v307()
-	pcall(function()game:service'StarterGui':SetCoreGuiEnabled(Enum.CoreGuiType.Chat,v309)end)
-	pcall(function()v308.BubbleChatConfiguration.Enabled=v309 end)
-	pcall(function()v308.ChatInputBarConfiguration.Enabled=v309 end)
-	pcall(function()v308.ChatWindowConfiguration.Enabled=v309 end)
+	if v305==0 then return end
+	local v314a=v305==2
+	pcall(function()game:service'StarterGui':SetCoreGuiEnabled(Enum.CoreGuiType.Chat,v314a)end)
+	pcall(function()v308.BubbleChatConfiguration.Enabled=v314a end)
+	pcall(function()v308.ChatInputBarConfiguration.Enabled=v314a end)
+	pcall(function()v308.ChatWindowConfiguration.Enabled=v314a end)
 end)
 
 local v310,v311={},nil
