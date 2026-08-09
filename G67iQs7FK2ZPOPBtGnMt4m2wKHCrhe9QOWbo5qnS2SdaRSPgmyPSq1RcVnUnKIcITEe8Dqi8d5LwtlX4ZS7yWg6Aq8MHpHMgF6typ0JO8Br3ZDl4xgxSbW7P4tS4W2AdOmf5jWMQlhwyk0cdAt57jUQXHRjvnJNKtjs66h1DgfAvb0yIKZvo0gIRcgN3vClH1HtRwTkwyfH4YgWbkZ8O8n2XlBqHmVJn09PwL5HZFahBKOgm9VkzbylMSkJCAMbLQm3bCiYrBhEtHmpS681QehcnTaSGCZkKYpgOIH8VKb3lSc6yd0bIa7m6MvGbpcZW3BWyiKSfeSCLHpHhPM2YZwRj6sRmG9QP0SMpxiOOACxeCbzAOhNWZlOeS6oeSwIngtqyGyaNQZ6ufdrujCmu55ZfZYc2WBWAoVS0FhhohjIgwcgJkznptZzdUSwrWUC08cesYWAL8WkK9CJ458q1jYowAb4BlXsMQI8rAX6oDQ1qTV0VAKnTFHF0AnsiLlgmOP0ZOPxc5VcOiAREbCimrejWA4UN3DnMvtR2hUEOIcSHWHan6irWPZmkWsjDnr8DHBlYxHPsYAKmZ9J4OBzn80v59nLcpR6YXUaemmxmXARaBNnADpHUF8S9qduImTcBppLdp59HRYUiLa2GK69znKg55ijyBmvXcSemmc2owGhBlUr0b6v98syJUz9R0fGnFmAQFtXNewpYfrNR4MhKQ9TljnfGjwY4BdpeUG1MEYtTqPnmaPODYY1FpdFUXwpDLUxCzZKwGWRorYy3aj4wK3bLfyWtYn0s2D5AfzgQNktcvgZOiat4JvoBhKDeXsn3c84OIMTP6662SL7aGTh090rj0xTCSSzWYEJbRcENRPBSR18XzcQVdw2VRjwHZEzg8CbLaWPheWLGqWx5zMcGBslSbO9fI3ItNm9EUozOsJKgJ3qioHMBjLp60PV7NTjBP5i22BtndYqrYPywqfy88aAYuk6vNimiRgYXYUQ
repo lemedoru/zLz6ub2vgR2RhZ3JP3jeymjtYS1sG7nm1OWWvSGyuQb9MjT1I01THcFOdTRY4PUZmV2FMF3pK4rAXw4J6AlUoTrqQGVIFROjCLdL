@@ -173,7 +173,7 @@ v15={
 	['Teleport']='テレポート',
 	['Script']='スクリプト',['Load IY']='IYを実行',['Load RSpy']='RSpyを実行',['Load Dex']='Dexを実行',['Load ShiftLock']='シフトロックを実行',['Unload']='LemeGUIを消す',['Language']='言語',
 	['Config']='設定',['Name']='名前',['Create Config']='設定を作成',['Load Config']='設定を反映',['OverWrite Config']='設定を上書き',['Delete Config']='設定を削除',['Set AutoLoad']='オートロードに設定',
-	['ESP']='ESP',['Mini ESP']='ミニESP',['HighLight']='ハイライト',['Spectate']='観戦',['Shader']='シェーダー',['Mini Shader']='ミニシェーダー',
+	['ESP']='ESP',['Box ESP']='ボックスESP',['Mini ESP']='ミニESP',['HighLight']='ハイライト',['Spectate']='観戦',['Shader']='シェーダー',['Mini Shader']='ミニシェーダー',
 	['ON']='オン',['OFF']='オフ',['NONE']='なし'
 }
 local v710,v711,v712,v713,v714,v715=false,0,0,nil,'',nil
@@ -2310,136 +2310,134 @@ local v430,v431=CreateGroup(v105,'ESP')
 local v432=0
 local function v433()v432=v432+1 return v432%2==1 and v430 or v431 end
 
-local v434,v435,v436={},nil,nil
-local v437,v438,v439=CreateToggle(v433(),'ESP',nil,function(v440)
+local v434,v435,v436,v437,v438,v439,v440,v441=nil,nil,nil,nil,nil,nil,nil,nil
+local v442,v443,v444=CreateToggle(v433(),'Box ESP',nil,function(v445)
 	if v435 then v435:Disconnect()v435=nil end
-	if v436 then
-		for v441,v442 in pairs(v436) do
-			local v443=v442
-			if v443 then
-				if v443[10] then pcall(function()v443[10]:Disconnect()end) end
-				if v443[1] then pcall(function()v443[1]:Destroy()end) end
+	if v440 then v440:Disconnect()v440=nil end
+	if v441 then v441:Disconnect()v441=nil end
+	if v439 then
+		for v446,v447 in pairs(v439) do
+			for v448=1,#v447 do
+				if v447[v448] then pcall(function()v447[v448]:Disconnect()end) end
 			end
-			v436[v441]=nil
+			v439[v446]=nil
 		end
 	end
-	v436=nil
-	if not v440 then return end
-	v436={}
-	local function v441(v442)
-		local v443={}
-		v436[v442]=v443
-		v443[10]=v442.CharacterAdded:Connect(function()v443[1],v443[2],v443[6],v443[7],v443[9]=nil,nil,nil,nil,nil end)
-	end
-	for _,v442 in ipairs(v1:GetPlayers()) do if v442~=v7 then v441(v442) end end
-	v5[#v5+1]=v1.PlayerAdded:Connect(function(v442) if v442~=v7 and v436 then v441(v442) end end)
-	v5[#v5+1]=v1.PlayerRemoving:Connect(function(v442)
-		local v443=v436 and v436[v442]
-		if v443 then
-			if v443[10] then pcall(function()v443[10]:Disconnect()end) end
-			if v443[1] then pcall(function()v443[1]:Destroy()end) end
-			v436[v442]=nil
+	if v437 then
+		for v446,v447 in pairs(v437) do
+			if v447 then pcall(function()v447:Destroy()end) end
+			v437[v446]=nil
 		end
+	end
+	if v436 then pcall(function()v436:Destroy()end)v436=nil end
+	v437=nil
+	v438=nil
+	v439=nil
+	if not v445 then return end
+	v436=Instance.new('ScreenGui',v8)
+	v436.IgnoreGuiInset=true
+	v436.ResetOnSpawn=false
+	v436.DisplayOrder=2147483647
+	v437={}
+	v438={}
+	v439={}
+	local function v446(v447,v448)
+		local v449=v439[v447]
+		if not v449 then v449={}v439[v447]=v449 end
+		if v449[1] then pcall(function()v449[1]:Disconnect()end)v449[1]=nil end
+		if v449[2] then pcall(function()v449[2]:Disconnect()end)v449[2]=nil end
+		v438[v447]={}
+		local v450=v437[v447]
+		if v450 then v450.Visible=false end
+		if not v448 then return end
+		for _,v451 in ipairs(v448:GetDescendants()) do
+			if v451:IsA('Part') or v451:IsA('MeshPart') then v438[v447][v451]=true end
+		end
+		v449[1]=v448.DescendantAdded:Connect(function(v451)
+			if v451:IsA('Part') or v451:IsA('MeshPart') then
+				local v452=v438[v447]
+				if v452 then v452[v451]=true end
+			end
+		end)
+		v449[2]=v448.DescendantRemoving:Connect(function(v451)
+			local v452=v438[v447]
+			if v452 then v452[v451]=nil end
+		end)
+	end
+	local function v449(v450)
+		if v450==v7 then return end
+		local v451=Instance.new('Frame',v436)
+		v451.BorderSizePixel=0
+		v451.BackgroundColor3=Color3.new(1,0,0)
+		v451.BackgroundTransparency=.5
+		v451.Visible=false
+		v437[v450]=v451
+		v439[v450]={}
+		v439[v450][3]=v450.CharacterAdded:Connect(function(v452)v446(v450,v452)end)
+		if v450.Character then v446(v450,v450.Character) end
+	end
+	for _,v450 in ipairs(v1:GetPlayers()) do v449(v450) end
+	v440=v1.PlayerAdded:Connect(v449)
+	v441=v1.PlayerRemoving:Connect(function(v450)
+		local v451=v439[v450]
+		if v451 then
+			for v452=1,#v451 do
+				if v451[v452] then pcall(function()v451[v452]:Disconnect()end) end
+			end
+			v439[v450]=nil
+		end
+		if v437[v450] then v437[v450]:Destroy()v437[v450]=nil end
+		v438[v450]=nil
 	end)
 	v435=v4.RenderStepped:Connect(function()
-		if v6 or not v436 then return end
-		for v442,v443 in pairs(v436) do
-			local v444=v442.Character
-			if not v444 then
-				if v443[1] then v443[1]:Destroy() v443[1]=nil end
-				v443[2],v443[6],v443[7],v443[9]=nil,nil,nil,nil
+		if v6 or not v436 or not v436.Parent then return end
+		local v450=workspace.CurrentCamera
+		if not v450 then return end
+		for v451,v452 in pairs(v437) do
+			local v453=v438[v451]
+			local v454=v451.Character
+			if not v453 or not v454 then
+				v452.Visible=false
 			else
-				local v445=v443[2]
-				if not v445 or not v445.Parent then
-					v445=nil
-					for _,v446 in ipairs(v444:GetChildren()) do
-					local v447=v446.Name
-					if v447=='HumanoidRootPart' then v445=v446 break
-					elseif (not v445) and v447=='Torso' then v445=v446
-					elseif (not v445) and v447=='Head' then v445=v446 end
-				end
-					v443[2]=v445
-				end
-				local v447=v443[6]
-				if not v447 or not v447.Parent then
-					v447=nil
-					for _,v446 in ipairs(v444:GetChildren()) do if v446.Name=='Humanoid' then v447=v446 break end end
-					v443[6]=v447
-				end
-				local v448,v449,v450=v443[1],v443[9],v443[7]
-				if v445 then
-					if not v448 or not v448.Parent or v448.Parent~=v445 or v448.Adornee~=v445 or not v449 or not v449.Parent or not v450 or not v450.Parent then
-						if v448 then v448:Destroy() end
-						local v451=Instance.new('BillboardGui')
-						v451.Adornee=v445
-						v451.Parent=v445
-						v451.AlwaysOnTop=true
-						v451.Size=UDim2.new(0,150,0,40)
-						v451.StudsOffsetWorldSpace=Vector3.new(0,4)
-						local v452=Instance.new('Frame')
-						v452.Parent=v451
-						v452.Size=UDim2.new(1,0,1)
-						v452.Position=UDim2.new(0.5,0,1)
-						v452.AnchorPoint=Vector2.new(0.5,1)
-						v452.BackgroundColor3=Color3.new(0.15,0.15,0.15)
-						local v453=Instance.new('UIStroke')
-						v453.Parent=v452
-						v453.Thickness=1
-						v453.Color=Color3.new(1,1,1)
-						local v454=Instance.new('UICorner')
-						v454.Parent=v452
-						v454.CornerRadius=UDim.new(0,10)
-						local v455=Instance.new('TextLabel')
-						v455.Parent=v452
-						v455.BackgroundTransparency=1
-						v455.Font=Enum.Font.Code
-						v455.TextColor3=Color3.new(1,1,1)
-						v455.TextSize=15
-						v455.TextXAlignment=Enum.TextXAlignment.Left
-						v455.TextYAlignment=Enum.TextYAlignment.Top
-						v455.TextWrapped=true
-						v455.Position=UDim2.new(0,6,0,4)
-						v455.Size=UDim2.new(1,-34,1,-8)
-						local v456=Instance.new('Frame')
-						v456.Parent=v452
-						v456.Size=UDim2.new(0,16,0,16)
-						v456.Position=UDim2.new(1,-22,0,6)
-						local v457=Instance.new('UICorner')
-						v457.Parent=v456
-						v457.CornerRadius=UDim.new(1,0)
-						local v458=Instance.new('UIStroke')
-						v458.Parent=v456
-						v458.Thickness=1
-						v458.Color=Color3.new(1,1,1)
-						v443[1],v443[9],v443[7]=v451,v455,v456
-						v448,v449,v450=v451,v455,v456
+				local v455,v456,v457,v458=1/0,1/0,-1/0,-1/0
+				local v459=false
+				for v460 in pairs(v453) do
+					if not v460.Parent then
+						v453[v460]=nil
+					else
+						local v461=v460.CFrame
+						local v462=v460.Size/2
+						for v463=-1,1,2 do
+							for v464=-1,1,2 do
+								for v465=-1,1,2 do
+									local v466,v467=v450:WorldToViewportPoint((v461*CFrame.new(v462.X*v463,v462.Y*v464,v462.Z*v465)).Position)
+									if v466.Z>0 then
+										v455=math.min(v455,v466.X)
+										v456=math.min(v456,v466.Y)
+										v457=math.max(v457,v466.X)
+										v458=math.max(v458,v466.Y)
+										if v467 then v459=true end
+									end
+								end
+							end
+						end
 					end
-					v448.Adornee=v445
-					v448.Parent=v445
-					v448.AlwaysOnTop=true
-					v448.Size=UDim2.new(0,150,0,40)
-					v448.StudsOffsetWorldSpace=Vector3.new(0,4)
-					v449.Font=Enum.Font.Code
-					v449.TextColor3=Color3.new(1,1,1)
-					v449.TextSize=15
-					v449.TextXAlignment=Enum.TextXAlignment.Left
-					v449.TextYAlignment=Enum.TextYAlignment.Top
-					v449.TextWrapped=true
-					v449.Position=UDim2.new(0,6,0,4)
-					v449.Size=UDim2.new(1,-34,1,-8)
-					v449.Text=v442.DisplayName..string.char(10)..v442.Name
-					local v459=0
-					if v447 then
-						local v460=v447.MaxHealth
-						if v460>0 then v459=v447.Health/v460 end
-					end
-					if v459<0 then v459=0 elseif v459>1 then v459=1 end
-					v450.BackgroundColor3=Color3.new(v459,v459,v459)
+				end
+				local v460=v702(v454)
+				if v459 and v460 then
+					v452.BackgroundColor3=v451.TeamColor.Color
+					v452.Position=UDim2.fromOffset(v455,v456)
+					v452.Size=UDim2.fromOffset(v457-v455,v458-v456)
+					v452.Visible=true
+				else
+					v452.Visible=false
 				end
 			end
 		end
 	end)
 	v5[#v5+1]=v435
+	v5[#v5+1]=v440
+	v5[#v5+1]=v441
 end)
 
 local v460,v461,v462=CreateToggle(v433(),'Mini ESP',nil,function(v463)
@@ -3154,14 +3152,18 @@ if v713 then v713(.9,'Creating Group.Config...') end
 		end
 	end
 	v346a()
-	local v347a,v348a,v349a=CreateSelect(v340a(),'Config',v345b,v344a,function(v350a)
+	local v347a,v348a,v349a
+	v347a,v348a,v349a=CreateSelect(v340a(),'Config',v345b,v344a,function(v350a)
 		v345b=tostring(v350a or '')
 		v345a=v344b[v345b] or v345b
+		task.defer(function()
+			if v349a then v349a(v345a) end
+		end)
 	end)
 	local function v350a()
 		v346a()
 		if v345a~='' and (not v24[v345a]) then v345a='' v345b='' pcall(function()v349a('')end) end
-		if v345a~='' then v345b=v345a..((v25==v345a) and ' (AutoLoad)' or '') end
+		if v345a~='' then v345b=v345a end
 		pcall(function()v349a(v345b)end)
 		v23()
 	end
@@ -3171,7 +3173,7 @@ if v713 then v713(.9,'Creating Group.Config...') end
 		if v24[v351a] then return end
 		v24[v351a]=v30()
 		v345a=v351a
-		v345b=v351a..((v25==v351a) and ' (AutoLoad)' or '')
+		v345b=v351a
 		pcall(function()v349a(v345b)end)
 		v350a()
 	end)
