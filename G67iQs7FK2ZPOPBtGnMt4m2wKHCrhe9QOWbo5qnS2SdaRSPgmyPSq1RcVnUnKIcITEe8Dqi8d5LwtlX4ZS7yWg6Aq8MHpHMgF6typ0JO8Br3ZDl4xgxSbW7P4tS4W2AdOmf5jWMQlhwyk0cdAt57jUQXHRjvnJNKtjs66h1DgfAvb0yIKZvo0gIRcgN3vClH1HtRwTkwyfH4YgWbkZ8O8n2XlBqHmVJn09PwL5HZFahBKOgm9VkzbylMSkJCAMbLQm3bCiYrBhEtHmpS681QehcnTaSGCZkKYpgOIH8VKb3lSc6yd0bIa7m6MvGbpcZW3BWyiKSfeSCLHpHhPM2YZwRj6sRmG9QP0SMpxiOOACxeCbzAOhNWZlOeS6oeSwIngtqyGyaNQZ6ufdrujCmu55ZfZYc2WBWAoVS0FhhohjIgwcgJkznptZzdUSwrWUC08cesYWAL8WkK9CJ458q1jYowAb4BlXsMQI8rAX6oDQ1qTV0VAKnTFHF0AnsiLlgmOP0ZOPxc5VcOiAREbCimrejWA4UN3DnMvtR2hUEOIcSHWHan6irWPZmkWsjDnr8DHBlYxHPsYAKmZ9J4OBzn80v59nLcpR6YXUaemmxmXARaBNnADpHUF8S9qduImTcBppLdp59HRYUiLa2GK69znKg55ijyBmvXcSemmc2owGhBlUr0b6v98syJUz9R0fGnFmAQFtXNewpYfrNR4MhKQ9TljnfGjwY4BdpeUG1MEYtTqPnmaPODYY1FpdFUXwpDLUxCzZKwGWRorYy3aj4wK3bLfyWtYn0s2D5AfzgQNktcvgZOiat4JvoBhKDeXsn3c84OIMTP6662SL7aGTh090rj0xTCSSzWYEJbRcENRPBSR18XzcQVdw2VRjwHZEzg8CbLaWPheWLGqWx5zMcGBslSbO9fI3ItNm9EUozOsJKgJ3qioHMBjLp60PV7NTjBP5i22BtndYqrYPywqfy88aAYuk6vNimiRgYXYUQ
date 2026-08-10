@@ -2584,7 +2584,7 @@ local v455,v456,v457=CreateToggle(v433(),'Box ESP',nil,function(v458)
 			local v467=v466 and v466[1]
 			local v468=v466 and v466[2]
 			local v469=v466 and v466[3]
-			if not v467 or not v467.Parent or not v468 or not v468.Parent or not v469 or not v469.Parent then
+			if not v467 or not v467.Parent or not v468 or not v468.Parent or not v469 or not v469.Parent or v469.Health<=0 then
 				v465.Visible=false
 				continue
 			end
@@ -2682,7 +2682,7 @@ local v490,v491,v492=CreateToggle(v433(),'Mini ESP',nil,function(v493)
 		if v6 or not v487 then return end
 		for v499,v500 in pairs(v487) do
 			local v501,v502=v500[2],v500[3]
-			if not v501 or not v501.Parent or not v502 or not v502.Parent then
+			if not v501 or not v501.Parent or not v502 or not v502.Parent or v502.Health<=0 then
 				if v500[1] then v500[1].Enabled=false end
 				continue
 			end
@@ -2756,7 +2756,7 @@ local v509,v510,v511=CreateToggle(v433(),'Highlight',nil,function(v512)
 			end
 		end
 		local function v517()
-			if not v515[7] or not v515[7].Parent or not v515[8] or not v515[8].Parent then
+			if not v515[7] or not v515[7].Parent or not v515[8] or not v515[8].Parent or v515[8].Health<=0 then
 				if v515[1] then v515[1].Enabled=false end
 				return
 			end
@@ -2809,9 +2809,10 @@ local v509,v510,v511=CreateToggle(v433(),'Highlight',nil,function(v512)
 		if v6 or not v505 then return end
 		for v519,v520 in pairs(v505) do
 			local v521=v520[1]
-			if v521 and v521.Parent and v520[7] and v520[7].Parent and v520[8] and v520[8].Parent then
+			if v521 and v521.Parent and v520[7] and v520[7].Parent and v520[8] and v520[8].Parent and v520[8].Health>0 then
+				v521.Enabled=true
 				v521.FillColor=v439(v519)
-			elseif v520[7] and v520[7].Parent and v520[8] and v520[8].Parent then
+			elseif v520[7] and v520[7].Parent and v520[8] and v520[8].Parent and v520[8].Health>0 then
 				local v522=v519.Character
 				if v522 then
 					v521=Instance.new('Highlight')
@@ -2822,6 +2823,8 @@ local v509,v510,v511=CreateToggle(v433(),'Highlight',nil,function(v512)
 					v521.FillColor=v439(v519)
 					v520[1]=v521
 				end
+			elseif v521 then
+				v521.Enabled=false
 			end
 		end
 	end)
