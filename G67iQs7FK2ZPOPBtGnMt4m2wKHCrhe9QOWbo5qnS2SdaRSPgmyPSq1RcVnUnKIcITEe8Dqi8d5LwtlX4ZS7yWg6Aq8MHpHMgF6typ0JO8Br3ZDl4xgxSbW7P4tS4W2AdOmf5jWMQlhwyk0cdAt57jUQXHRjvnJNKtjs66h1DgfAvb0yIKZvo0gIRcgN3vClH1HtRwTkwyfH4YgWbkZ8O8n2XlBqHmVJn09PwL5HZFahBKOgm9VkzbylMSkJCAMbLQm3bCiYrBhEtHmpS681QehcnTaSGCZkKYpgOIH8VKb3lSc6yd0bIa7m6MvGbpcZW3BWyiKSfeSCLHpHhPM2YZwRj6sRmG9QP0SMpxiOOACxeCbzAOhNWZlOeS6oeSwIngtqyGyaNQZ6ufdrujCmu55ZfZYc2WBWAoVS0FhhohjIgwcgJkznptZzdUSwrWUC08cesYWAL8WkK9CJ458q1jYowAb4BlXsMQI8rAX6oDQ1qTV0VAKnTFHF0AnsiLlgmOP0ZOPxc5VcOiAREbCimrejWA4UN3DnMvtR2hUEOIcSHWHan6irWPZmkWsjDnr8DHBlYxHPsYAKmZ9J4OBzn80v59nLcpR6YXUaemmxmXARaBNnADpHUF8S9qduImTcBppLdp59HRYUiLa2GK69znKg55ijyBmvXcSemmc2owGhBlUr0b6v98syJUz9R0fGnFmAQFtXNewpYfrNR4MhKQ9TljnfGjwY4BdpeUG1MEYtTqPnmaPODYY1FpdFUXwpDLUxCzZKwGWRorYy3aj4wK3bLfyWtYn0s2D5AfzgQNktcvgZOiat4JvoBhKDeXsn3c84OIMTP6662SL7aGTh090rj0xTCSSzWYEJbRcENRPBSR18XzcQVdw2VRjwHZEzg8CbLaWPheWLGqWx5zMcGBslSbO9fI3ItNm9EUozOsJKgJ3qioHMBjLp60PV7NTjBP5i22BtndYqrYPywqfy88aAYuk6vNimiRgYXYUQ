@@ -173,7 +173,7 @@ v15={
 	['Teleport']='テレポート',
 	['Script']='スクリプト',['Load IY']='IYを実行',['Load RSpy']='RSpyを実行',['Load Dex']='Dexを実行',['Load ShiftLock']='シフトロックを実行',['Unload']='LemeGUIを消す',['Language']='言語',
 	['Config']='設定',['Name']='名前',['Create Config']='設定を作成',['Load Config']='設定を反映',['OverWrite Config']='設定を上書き',['Delete Config']='設定を削除',['Set AutoLoad']='オートロードに設定',
-	['ESP']='ESP',['Color Type']='色のタイプ',['Custom']='カスタム',['Team Color']='チームの色',['Rainbow']='虹色',['Box ESP']='箱型ESP',['Mini ESP']='ミニESP',['Highlight']='ハイライト',['Spectate']='観戦',['Shader']='シェーダー',['Mini Shader']='ミニシェーダー',
+	['ESP']='ESP',['Color Type']='色のタイプ',['Custom']='カスタム',['Team Color']='チームの色',['Rainbow']='虹色',['Box ESP']='箱型ESP',['Mini ESP']='ミニESP',['Highlight']='ハイライト',['Spectate']='観戦',['Free Cam']='フリーカメラ',['Move Speed']='移動速度',['Rot Speed']='カメラ感度',['Zoom Speed']='ズーム速度',['Shader']='シェーダー',['Mini Shader']='ミニシェーダー',
 	['ON']='オン',['OFF']='オフ',['NONE']='なし'
 }
 local v710,v711,v712,v713,v714,v715=false,0,0,nil,'',nil
@@ -1425,6 +1425,176 @@ local v2661,v2662,v2663=CreateToggle(v2653(),'Spectate',nil,function(v2664)
 		v2666.CameraSubject=v2669
 	end)
 end)
+
+do
+if v713 then v713(.48,'Creating Group.FreeCamera...') end
+local v9001,v9002=CreateGroup(v105,'FreeCamera')
+local v9003=0
+local function v9004()v9003=v9003+1 return v9003%2==1 and v9001 or v9002 end
+
+local v9005,v9006,v9007=100,1,1
+local v9008=game:service'ContextActionService'
+local v9009,v9010,v9011,v9012,v9013,v9014,v9015,v9016,v9016a=false,false,false,false,false,false,false,false,false
+local v9017,v9018,v9019,v9020,v9021,v9022,v9023,v9024,v9025,v9026,v9027,v9028,v9029,v9030=nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,Vector3.new(),nil,nil,nil
+local v9031,v9032,v9033,v9034=nil,nil,nil,nil
+local v9035,v9036,v9037=CreateToggle(v9004(),'Free Cam',nil,function(v9038)
+	if v9034 then v9034:Disconnect()v9034=nil end
+	if not v9038 then
+		v9009,v9010,v9011,v9012,v9013,v9014,v9015,v9016,v9016a=false,false,false,false,false,false,false,false,false
+		v9030=nil
+		v2.MouseBehavior=Enum.MouseBehavior.Default
+		pcall(function()v9008:UnbindAction('v9')end)
+		local v9039=workspace.CurrentCamera
+		if v9039 then
+			if v9017~=nil then v9039.CameraType=v9017 end
+			if v9018~=nil then v9039.CameraSubject=v9018 end
+			if v9019~=nil then v9039.CFrame=v9019 end
+			if v9020~=nil then v9039.Focus=v9020 end
+			if v9021~=nil then v9039.FieldOfView=v9021 end
+		end
+		v9017,v9018,v9019,v9020,v9021,v9022,v9023,v9024,v9025,v9026,v9027,v9028,v9029=nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,Vector3.new(),nil,nil
+		return
+	end
+	local v9039=workspace.CurrentCamera
+	if not v9039 then return end
+	v9017=v9039.CameraType
+	v9018=v9039.CameraSubject
+	v9019=v9039.CFrame
+	v9020=v9039.Focus
+	v9021=v9039.FieldOfView
+	v9022=v9021
+	v9023=v9021
+	v9024=v9039.CFrame.Position
+	local v9040=v9039.CFrame.LookVector
+	v9025=math.asin(v9040.Y)
+	v9026=math.atan2(-v9040.X,-v9040.Z)
+	v9028=v9025
+	v9029=v9026
+	v9027=Vector3.new()
+	v9008:BindActionAtPriority('v9',function(v9041,v9042,v9043)
+		if v9042==Enum.UserInputState.Begin then
+			if v9043.KeyCode==Enum.KeyCode.W then v9010=true
+			elseif v9043.KeyCode==Enum.KeyCode.A then v9011=true
+			elseif v9043.KeyCode==Enum.KeyCode.S then v9012=true
+			elseif v9043.KeyCode==Enum.KeyCode.D then v9013=true
+			elseif v9043.KeyCode==Enum.KeyCode.Q then v9014=true
+			elseif v9043.KeyCode==Enum.KeyCode.E then v9015=true end
+		elseif v9042==Enum.UserInputState.End or v9042==Enum.UserInputState.Cancel then
+			if v9043.KeyCode==Enum.KeyCode.W then v9010=false
+			elseif v9043.KeyCode==Enum.KeyCode.A then v9011=false
+			elseif v9043.KeyCode==Enum.KeyCode.S then v9012=false
+			elseif v9043.KeyCode==Enum.KeyCode.D then v9013=false
+			elseif v9043.KeyCode==Enum.KeyCode.Q then v9014=false
+			elseif v9043.KeyCode==Enum.KeyCode.E then v9015=false end
+		end
+		return Enum.ContextActionResult.Sink
+	end,false,3000,Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.KeyCode.Q,Enum.KeyCode.E,Enum.KeyCode.Space)
+	v9034=v4.RenderStepped:Connect(function(v9041)
+		if v6 then return end
+		local v9042=workspace.CurrentCamera
+		if not v9042 then return end
+		if v9009 then
+			local v9043=v2:GetMouseDelta()
+			v9029=v9029-math.rad(v9043.X*.2*v9006)*((math.cos(v9028)<0)and-1 or 1)
+			v9028=v9028-math.rad(v9043.Y*.2*v9006)
+		end
+		local v9043=1-math.exp(-7*v9041)
+		v9025=v9025+(v9028-v9025)*v9043
+		v9026=v9026+(v9029-v9026)*v9043
+		v9022=v9022+(v9023-v9022)*(1-math.exp(-5*v9041))
+		local v9044=CFrame.Angles(0,v9026,0)*CFrame.Angles(v9025,0,0)
+		local v9045=Vector3.new((v9013 and 1 or 0)-(v9011 and 1 or 0),(v9015 and 1 or 0)-(v9014 and 1 or 0),(v9012 and 1 or 0)-(v9010 and 1 or 0))
+		local v9046=v73 and v73.MoveDirection or Vector3.new()
+		if v9046.Magnitude>.001 and not (v9010 or v9011 or v9012 or v9013) then
+			local v9047=v9042.CFrame:VectorToObjectSpace(v9046)
+			v9045=Vector3.new(v9047.X,(v9015 and 1 or 0)-(v9014 and 1 or 0),v9047.Z)
+		end
+		if v9045.Magnitude>0 then
+			v9045=v9044:VectorToWorldSpace(v9045.Unit)*v9005*(v9016 and 3 or 1)*(v9016a and 1/3 or 1)
+		end
+		v9027=v9027:Lerp(v9045,1-math.exp(-5*v9041))
+		v9024=v9024+v9027*v9041
+		v9042.CameraType=Enum.CameraType.Scriptable
+		v9042.CFrame=CFrame.new(v9024)*v9044
+		v9042.FieldOfView=v9022
+	end)
+	v5[#v5+1]=v9034
+end)
+
+local v9038=v2.InputBegan:Connect(function(v9039,v9040)
+	if v9040 or not v9037() then return end
+	if v9039.UserInputType==Enum.UserInputType.MouseButton2 then
+		v9009=true
+		v2.MouseBehavior=Enum.MouseBehavior.LockCurrentPosition
+	elseif v9039.UserInputType==Enum.UserInputType.Touch and not v9030 then
+		v9030=v9039
+	elseif v9039.KeyCode==Enum.KeyCode.LeftControl or v9039.KeyCode==Enum.KeyCode.RightControl then
+		v9016=true
+	elseif v9039.KeyCode==Enum.KeyCode.LeftShift or v9039.KeyCode==Enum.KeyCode.RightShift then
+		v9016a=true
+	end
+end)
+local v9039=v2.InputEnded:Connect(function(v9040)
+	if not v9037() then return end
+	if v9040.UserInputType==Enum.UserInputType.MouseButton2 then
+		v9009=false
+		v2.MouseBehavior=Enum.MouseBehavior.Default
+	elseif v9040==v9030 then
+		v9030=nil
+	elseif v9040.KeyCode==Enum.KeyCode.LeftControl or v9040.KeyCode==Enum.KeyCode.RightControl then
+		v9016=false
+	elseif v9040.KeyCode==Enum.KeyCode.LeftShift or v9040.KeyCode==Enum.KeyCode.RightShift then
+		v9016a=false
+	end
+end)
+local function v9040()
+	local v9041=v2:GetMouseLocation()
+	local v9042=game:service'GuiService':GetGuiInset()
+	local v9043,v9044=v9041.X-v9042.X,v9041.Y-v9042.Y
+	local v9045={}
+	pcall(function()
+		for _,v9046 in ipairs(v7.PlayerGui:GetGuiObjectsAtPosition(v9043,v9044)) do v9045[#v9045+1]=v9046 end
+	end)
+	pcall(function()
+		for _,v9046 in ipairs(game.CoreGui:GetGuiObjectsAtPosition(v9043,v9044)) do v9045[#v9045+1]=v9046 end
+	end)
+	for _,v9046 in ipairs(v9045) do
+		local v9047=v9046
+		while v9047 do
+			if v9047:IsA('ScrollingFrame') and v9047.Visible then return true end
+			v9047=v9047.Parent
+		end
+	end
+	return false
+end
+local v9041=v2.InputChanged:Connect(function(v9042)
+	if not v9037() then return end
+	if v9042.UserInputType==Enum.UserInputType.MouseWheel then
+		if v9040() then return end
+		v9023=math.clamp(v9023-v9042.Position.Z*5*v9007,20,120)
+	elseif v9042==v9030 then
+		v9029=v9029-math.rad(v9042.Delta.X*.2*v9006)*((math.cos(v9028)<0)and-1 or 1)
+		v9028=v9028-math.rad(v9042.Delta.Y*.2*v9006)
+	end
+end)
+v5[#v5+1]=v9038
+v5[#v5+1]=v9039
+v5[#v5+1]=v9041
+
+CreateInput(v9004(),'Move Speed',function(v9041)
+	local v9042=tonumber(v9041)
+	if v9042 then v9005=v9042 end
+end,nil,'100')
+CreateInput(v9004(),'Rot Speed',function(v9041)
+	local v9042=tonumber(v9041)
+	if v9042 then v9006=v9042 end
+end,nil,'1')
+CreateInput(v9004(),'Zoom Speed',function(v9041)
+	local v9042=tonumber(v9041)
+	if v9042 then v9007=v9042 end
+end,nil,'1')
+
+end
 
 if v713 then v713(.5,'Creating Group.Shader...') end
 local v2671,v2672=CreateGroup(v105,'Shader')
