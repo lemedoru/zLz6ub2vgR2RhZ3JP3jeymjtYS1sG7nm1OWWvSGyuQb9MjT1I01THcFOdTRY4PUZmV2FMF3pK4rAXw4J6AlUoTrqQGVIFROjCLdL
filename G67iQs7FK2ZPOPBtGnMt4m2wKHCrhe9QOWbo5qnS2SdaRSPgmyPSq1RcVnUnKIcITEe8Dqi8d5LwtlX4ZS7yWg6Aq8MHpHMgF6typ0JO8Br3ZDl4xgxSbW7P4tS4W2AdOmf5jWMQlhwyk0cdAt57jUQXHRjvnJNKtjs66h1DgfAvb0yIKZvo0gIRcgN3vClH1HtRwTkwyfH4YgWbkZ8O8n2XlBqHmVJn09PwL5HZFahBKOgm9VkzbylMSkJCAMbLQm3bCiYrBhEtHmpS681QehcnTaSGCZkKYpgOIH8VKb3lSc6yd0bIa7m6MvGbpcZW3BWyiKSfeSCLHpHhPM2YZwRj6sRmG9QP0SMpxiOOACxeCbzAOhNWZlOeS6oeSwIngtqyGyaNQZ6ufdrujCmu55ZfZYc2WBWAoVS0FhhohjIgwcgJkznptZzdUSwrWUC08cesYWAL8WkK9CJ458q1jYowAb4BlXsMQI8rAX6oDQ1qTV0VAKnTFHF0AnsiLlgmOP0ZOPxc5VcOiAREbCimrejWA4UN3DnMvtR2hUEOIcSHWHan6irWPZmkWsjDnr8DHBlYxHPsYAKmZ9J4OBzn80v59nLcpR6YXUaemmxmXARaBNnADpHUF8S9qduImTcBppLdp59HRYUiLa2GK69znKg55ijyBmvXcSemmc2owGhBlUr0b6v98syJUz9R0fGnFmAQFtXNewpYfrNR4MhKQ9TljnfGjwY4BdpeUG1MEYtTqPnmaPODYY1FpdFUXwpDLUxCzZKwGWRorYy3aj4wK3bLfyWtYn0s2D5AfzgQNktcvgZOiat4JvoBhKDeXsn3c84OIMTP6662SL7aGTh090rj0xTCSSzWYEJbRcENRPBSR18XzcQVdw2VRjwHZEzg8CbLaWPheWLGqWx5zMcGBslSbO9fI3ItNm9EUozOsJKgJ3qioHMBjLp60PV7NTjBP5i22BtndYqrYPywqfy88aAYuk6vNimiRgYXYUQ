@@ -2310,339 +2310,365 @@ local v430,v431=CreateGroup(v105,'ESP')
 local v432=0
 local function v433()v432=v432+1 return v432%2==1 and v430 or v431 end
 
-local v434,v435,v436,v437,v438,v439,v440,v441=nil,nil,nil,nil,nil,nil,nil,nil
-local v442,v443,v444=CreateToggle(v433(),'Box ESP',nil,function(v445)
-	if v435 then v435:Disconnect()v435=nil end
-	if v440 then v440:Disconnect()v440=nil end
-	if v441 then v441:Disconnect()v441=nil end
-	if v439 then
-		for v446,v447 in pairs(v439) do
-			for v448=1,#v447 do
-				if v447[v448] then pcall(function()v447[v448]:Disconnect()end) end
+local v434,v435,v436,v437='Custom',255,0,0
+local v438=nil
+local function v439(v440)
+	if v434=='Team Color' then return v440.TeamColor.Color end
+	if v434=='Rainbow' then return Color3.fromHSV((os.clock()%5)/5,1,1) end
+	return Color3.fromRGB(math.clamp(v435,0,255),math.clamp(v436,0,255),math.clamp(v437,0,255))
+end
+
+local v447,v448,v449,v450,v451,v452,v453,v454=nil,nil,nil,nil,nil,nil,nil,nil
+local v455,v456,v457=CreateToggle(v433(),'Box ESP',nil,function(v458)
+	if v448 then v448:Disconnect()v448=nil end
+	if v452 then v452:Disconnect()v452=nil end
+	if v453 then v453:Disconnect()v453=nil end
+	if v451 then
+		for v459,v460 in pairs(v451) do
+			for v461=1,#v460 do
+				if v460[v461] then pcall(function()v460[v461]:Disconnect()end) end
 			end
-			v439[v446]=nil
+			v451[v459]=nil
 		end
 	end
-	if v437 then
-		for v446,v447 in pairs(v437) do
-			if v447 then pcall(function()v447:Destroy()end) end
-			v437[v446]=nil
+	if v450 then
+		for v459,v460 in pairs(v450) do
+			if v460 then pcall(function()v460:Destroy()end) end
+			v450[v459]=nil
 		end
 	end
-	if v436 then pcall(function()v436:Destroy()end)v436=nil end
-	v437=nil
-	v438=nil
-	v439=nil
-	if not v445 then return end
-	v436=Instance.new('ScreenGui',v8)
-	v436.IgnoreGuiInset=true
-	v436.ResetOnSpawn=false
-	v436.DisplayOrder=2147483647
-	v437={}
-	v438={}
-	v439={}
-	local function v446(v447,v448)
-		local v449=v439[v447]
-		if not v449 then v449={}v439[v447]=v449 end
-		if v449[1] then pcall(function()v449[1]:Disconnect()end)v449[1]=nil end
-		if v449[2] then pcall(function()v449[2]:Disconnect()end)v449[2]=nil end
-		v438[v447]={}
-		local v450=v437[v447]
-		if v450 then v450.Visible=false end
-		if not v448 then return end
-		for _,v451 in ipairs(v448:GetDescendants()) do
-			if v451:IsA('Part') or v451:IsA('MeshPart') then v438[v447][v451]=true end
+	if v449 then pcall(function()v449:Destroy()end)v449=nil end
+	v450=nil
+	v451=nil
+	v454=nil
+	if not v458 then return end
+	v449=Instance.new('ScreenGui',v8)
+	v449.IgnoreGuiInset=true
+	v449.ResetOnSpawn=false
+	v449.DisplayOrder=2147483647
+	v450={}
+	v451={}
+	v454={}
+	local function v459(v460,v461)
+		local v462=v451[v460]
+		if not v462 then v462={}v451[v460]=v462 end
+		if v462[1] then pcall(function()v462[1]:Disconnect()end)v462[1]=nil end
+		if v462[2] then pcall(function()v462[2]:Disconnect()end)v462[2]=nil end
+		v454[v460]={v461,nil,nil}
+		if v450[v460] then v450[v460].Visible=false end
+		if not v461 then return end
+		for _,v463 in ipairs(v461:GetDescendants()) do
+			if v463.Name=='HumanoidRootPart' and v463:IsA('BasePart') then
+				v454[v460][2]=v463
+			elseif v463:IsA('Humanoid') then
+				v454[v460][3]=v463
+			end
 		end
-		v449[1]=v448.DescendantAdded:Connect(function(v451)
-			if v451:IsA('Part') or v451:IsA('MeshPart') then
-				local v452=v438[v447]
-				if v452 then v452[v451]=true end
+		v462[1]=v461.DescendantAdded:Connect(function(v463)
+			local v464=v454[v460]
+			if not v464 or v464[1]~=v461 then return end
+			if v463.Name=='HumanoidRootPart' and v463:IsA('BasePart') then
+				v464[2]=v463
+			elseif v463:IsA('Humanoid') then
+				v464[3]=v463
 			end
 		end)
-		v449[2]=v448.DescendantRemoving:Connect(function(v451)
-			local v452=v438[v447]
-			if v452 then v452[v451]=nil end
+		v462[2]=v461.DescendantRemoving:Connect(function(v463)
+			local v464=v454[v460]
+			if not v464 or v464[1]~=v461 then return end
+			if v464[2]==v463 then v464[2]=nil end
+			if v464[3]==v463 then v464[3]=nil end
 		end)
 	end
-	local function v449(v450)
-		if v450==v7 then return end
-		local v451=Instance.new('Frame',v436)
-		v451.BorderSizePixel=0
-		v451.BackgroundColor3=Color3.new(1,0,0)
-		v451.BackgroundTransparency=.5
-		v451.Visible=false
-		v437[v450]=v451
-		v439[v450]={}
-		v439[v450][3]=v450.CharacterAdded:Connect(function(v452)v446(v450,v452)end)
-		if v450.Character then v446(v450,v450.Character) end
+	local function v463(v464)
+		if v464==v7 then return end
+		local v465=Instance.new('Frame',v449)
+		v465.BorderSizePixel=0
+		v465.BackgroundColor3=v439(v464)
+		v465.BackgroundTransparency=.5
+		v465.Visible=false
+		v450[v464]=v465
+		v451[v464]={}
+		v451[v464][3]=v464.CharacterAdded:Connect(function(v466)v459(v464,v466)end)
+		if v464.Character then v459(v464,v464.Character) end
 	end
-	for _,v450 in ipairs(v1:GetPlayers()) do v449(v450) end
-	v440=v1.PlayerAdded:Connect(v449)
-	v441=v1.PlayerRemoving:Connect(function(v450)
-		local v451=v439[v450]
-		if v451 then
-			for v452=1,#v451 do
-				if v451[v452] then pcall(function()v451[v452]:Disconnect()end) end
+	for _,v464 in ipairs(v1:GetPlayers()) do v463(v464) end
+	v452=v1.PlayerAdded:Connect(v463)
+	v453=v1.PlayerRemoving:Connect(function(v464)
+		local v465=v451[v464]
+		if v465 then
+			for v466=1,#v465 do
+				if v465[v466] then pcall(function()v465[v466]:Disconnect()end) end
 			end
-			v439[v450]=nil
+			v451[v464]=nil
 		end
-		if v437[v450] then v437[v450]:Destroy()v437[v450]=nil end
-		v438[v450]=nil
+		if v450[v464] then v450[v464]:Destroy()v450[v464]=nil end
+		v454[v464]=nil
 	end)
-	v435=v4.RenderStepped:Connect(function()
-		if v6 or not v436 or not v436.Parent then return end
-		local v450=workspace.CurrentCamera
-		if not v450 then return end
-		for v451,v452 in pairs(v437) do
-			local v453=v438[v451]
-			local v454=v451.Character
-			if not v453 or not v454 then
-				v452.Visible=false
-			else
-				local v455,v456,v457,v458=1/0,1/0,-1/0,-1/0
-				local v459=false
-				for v460 in pairs(v453) do
-					if not v460.Parent then
-						v453[v460]=nil
-					else
-						local v461=v460.CFrame
-						local v462=v460.Size/2
-						for v463=-1,1,2 do
-							for v464=-1,1,2 do
-								for v465=-1,1,2 do
-									local v466,v467=v450:WorldToViewportPoint((v461*CFrame.new(v462.X*v463,v462.Y*v464,v462.Z*v465)).Position)
-									if v466.Z>0 then
-										v455=math.min(v455,v466.X)
-										v456=math.min(v456,v466.Y)
-										v457=math.max(v457,v466.X)
-										v458=math.max(v458,v466.Y)
-										if v467 then v459=true end
-									end
-								end
-							end
+	v448=v4.RenderStepped:Connect(function()
+		if v6 or not v449 or not v449.Parent then return end
+		local v463=workspace.CurrentCamera
+		if not v463 then return end
+		for v464,v465 in pairs(v450) do
+			local v466=v454[v464]
+			local v467=v466 and v466[1]
+			local v468=v466 and v466[2]
+			local v469=v466 and v466[3]
+			if not v467 or not v467.Parent or not v468 or not v468.Parent or not v469 or not v469.Parent then
+				v465.Visible=false
+				continue
+			end
+			local v470,v471=v463:WorldToViewportPoint(v468.Position)
+			if v470.Z<=0 or not v471 then
+				v465.Visible=false
+				continue
+			end
+			local v472,v473=v467:GetBoundingBox()
+			local v474=v473/2
+			local v475,v476,v477,v478=1/0,1/0,-1/0,-1/0
+			local v479=false
+			for v480=-1,1,2 do
+				for v481=-1,1,2 do
+					for v482=-1,1,2 do
+						local v483,v484=v463:WorldToViewportPoint((v472*CFrame.new(v474.X*v480,v474.Y*v481,v474.Z*v482)).Position)
+						if v483.Z>0 then
+							if v483.X<v475 then v475=v483.X end
+							if v483.Y<v476 then v476=v483.Y end
+							if v483.X>v477 then v477=v483.X end
+							if v483.Y>v478 then v478=v483.Y end
+							if v484 then v479=true end
 						end
 					end
 				end
-				local v460,v461=nil,nil
-				for _,v462 in ipairs(v454:GetChildren()) do
-					if v462.Name=='HumanoidRootPart' then v460=v462
-					elseif v462:IsA('Humanoid') then v461=v462 end
-				end
-				if v459 and v460 and v461 then
-					v452.BackgroundColor3=v451.TeamColor.Color
-					v452.Position=UDim2.fromOffset(v455,v456)
-					v452.Size=UDim2.fromOffset(v457-v455,v458-v456)
-					v452.Visible=true
-				else
-					v452.Visible=false
-				end
 			end
-		end
-	end)
-	v5[#v5+1]=v435
-	v5[#v5+1]=v440
-	v5[#v5+1]=v441
-end)
-
-local v460,v461,v462=CreateToggle(v433(),'Mini ESP',nil,function(v463)
-	if v461 then v461:Disconnect()v461=nil end
-	if v462 then
-		for v464,v465 in pairs(v462) do
-			if v465 and v465[4] then pcall(function()v465[4]:Disconnect()end) end
-			if v465 and v465[1] then pcall(function()v465[1]:Destroy()end) end
-			v462[v464]=nil
-		end
-	end
-	v462=nil
-	if not v463 then return end
-	v462={}
-	local function v464(v465)
-		local v466={}
-		v462[v465]=v466
-		v466[4]=v465.CharacterAdded:Connect(function()v466[1],v466[2],v466[3],v466[5]=nil,nil,nil,nil end)
-	end
-	for _,v465 in ipairs(v1:GetPlayers()) do if v465~=v7 then v464(v465) end end
-	v5[#v5+1]=v1.PlayerAdded:Connect(function(v465) if v465~=v7 and v462 then v464(v465) end end)
-	v5[#v5+1]=v1.PlayerRemoving:Connect(function(v465)
-		local v466=v462 and v462[v465]
-		if v466 then
-			if v466[4] then pcall(function()v466[4]:Disconnect()end) end
-			if v466[1] then pcall(function()v466[1]:Destroy()end) end
-			v462[v465]=nil
-		end
-	end)
-	v461=v4.RenderStepped:Connect(function()
-		if v6 or not v462 then return end
-		for v465,v466 in pairs(v462) do
-			local v467=v465.Character
-			if not v467 then
-				if v466[1] then v466[1]:Destroy() v466[1]=nil end
-				v466[2],v466[3],v466[5]=nil,nil,nil
+			if v479 then
+				v465.BackgroundColor3=v439(v464)
+				v465.Position=UDim2.fromOffset(v475,v476)
+				v465.Size=UDim2.fromOffset(v477-v475,v478-v476)
+				v465.Visible=true
 			else
-				local v468=v466[2]
-				if not v468 or not v468.Parent then
-					v468=nil
-					for _,v469 in ipairs(v467:GetChildren()) do
-					local v470=v469.Name
-					if v470=='HumanoidRootPart' then v468=v469 break
-					elseif (not v468) and v470=='Torso' then v468=v469
-					elseif (not v468) and v470=='Head' then v468=v469 end
-				end
-					v466[2]=v468
-				end
-				local v470,v471=nil,nil
-				for _,v472 in ipairs(v467:GetChildren()) do
-					if v472.Name=='HumanoidRootPart' then v470=v472
-					elseif v472:IsA('Humanoid') then v471=v472 end
-				end
-				local v472,v473,v474=v466[1],v466[3],v466[5]
-				if v468 and v470 and v471 then
-					if not v472 or not v472.Parent or v472.Parent~=v468 or v472.Adornee~=v468 or not v473 or not v473.Parent or not v474 or not v474.Parent then
-						if v472 then v472:Destroy() end
-						local v475=Instance.new('BillboardGui')
-						v475.Adornee=v468
-						v475.Parent=v468
-						v475.AlwaysOnTop=true
-						v475.Size=UDim2.new(0,160,0,30)
-						v475.StudsOffsetWorldSpace=Vector3.new(0,4)
-						local v476=Instance.new('TextLabel')
-						v476.Parent=v475
-						v476.Size=UDim2.new(1,0,1)
-						v476.BackgroundTransparency=1
-						v476.Font=Enum.Font.Code
-						v476.TextColor3=Color3.new(1,1,1)
-						v476.TextSize=22
-						v476.TextXAlignment=Enum.TextXAlignment.Center
-						v476.TextYAlignment=Enum.TextYAlignment.Center
-						local v477=Instance.new('UIStroke')
-						v477.Parent=v476
-						v477.Thickness=1
-						v477.Color=Color3.new(0,0,0)
-						v466[1],v466[3],v466[5]=v475,v476,v477
-						v472,v473,v474=v475,v476,v477
-					end
-					v472.Enabled=true
-					v472.Adornee=v468
-					v472.Parent=v468
-					v472.AlwaysOnTop=true
-					v472.Size=UDim2.new(0,160,0,30)
-					v472.StudsOffsetWorldSpace=Vector3.new(0,4)
-					v473.Size=UDim2.new(1,0,1)
-					v473.BackgroundTransparency=1
-					v473.Font=Enum.Font.Code
-					local v476a=v465.TeamColor
-					v473.TextColor3=v476a and v476a.Color or Color3.new(1,1,1)
-					v473.TextSize=22
-					v473.TextXAlignment=Enum.TextXAlignment.Center
-					v473.TextYAlignment=Enum.TextYAlignment.Center
-					v473.Text=v465.Name
-					if not v474 or not v474.Parent or v474.Parent~=v473 then
-						v474=nil
-						for _,v475 in ipairs(v473:GetChildren()) do if v475.ClassName=='UIStroke' then v474=v475 break end end
-						if not v474 then v474=Instance.new('UIStroke') v474.Parent=v473 end
-						v466[5]=v474
-					end
-					v474.Thickness=1
-					v474.Color=Color3.new(0,0,0)
-				else
-					if v472 then v472.Enabled=false end
-				end
+				v465.Visible=false
 			end
 		end
 	end)
-	v5[#v5+1]=v461
+	v5[#v5+1]=v448
+	v5[#v5+1]=v452
+	v5[#v5+1]=v453
 end)
 
-local v476,v477,v478=CreateToggle(v433(),'HighLight',nil,function(v479a)
-	if v480 then v480:Disconnect()v480=nil end
-	if v479 then
-		for v481,v482 in pairs(v479) do
-			if v482 then
-				if v482[2] then pcall(function()v482[2]:Disconnect()end) end
-				if v482[3] then for v483,v484 in pairs(v482[3]) do if v483 and v483.Parent then v483.Transparency=v484 end end v482[3]=nil end
-				if v482[1] then pcall(function()v482[1]:Destroy()end) end
-			end
-			v479[v481]=nil
+local v485,v486,v487,v488,v489=nil,nil,nil,nil,nil
+local v490,v491,v492=CreateToggle(v433(),'Mini ESP',nil,function(v493)
+	if v486 then v486:Disconnect()v486=nil end
+	if v488 then v488:Disconnect()v488=nil end
+	if v489 then v489:Disconnect()v489=nil end
+	if v487 then
+		for v494,v495 in pairs(v487) do
+			for v496=4,6 do if v495[v496] then pcall(function()v495[v496]:Disconnect()end) end end
+			if v495[1] then pcall(function()v495[1]:Destroy()end) end
+			v487[v494]=nil
 		end
 	end
-	v479=nil
-	if not v479a then return end
-	v479={}
-	local function v481(v482)
-		local v483={}
-		v479[v482]=v483
-		v483[2]=v482.CharacterAdded:Connect(function()
-			if v483[3] then
-				for v484,v485 in pairs(v483[3]) do if v484 and v484.Parent then v484.Transparency=v485 end end
-				v483[3]=nil
-			end
-			if v483[1] then pcall(function()v483[1]:Destroy()end) end
-			v483[1]=nil
+	v487=nil
+	if not v493 then return end
+	v487={}
+	local function v494(v495,v496)
+		local v497=v487[v495]
+		if not v497 then return end
+		if v497[5] then pcall(function()v497[5]:Disconnect()end)v497[5]=nil end
+		if v497[6] then pcall(function()v497[6]:Disconnect()end)v497[6]=nil end
+		if v497[1] then pcall(function()v497[1]:Destroy()end)v497[1]=nil end
+		v497[2],v497[3],v497[7]=nil,nil,nil
+		if not v496 then return end
+		for _,v498 in ipairs(v496:GetDescendants()) do
+			if v498.Name=='HumanoidRootPart' and v498:IsA('BasePart') then v497[2]=v498
+			elseif v498:IsA('Humanoid') then v497[3]=v498 end
+		end
+		v497[5]=v496.DescendantAdded:Connect(function(v498)
+			if v498.Name=='HumanoidRootPart' and v498:IsA('BasePart') then v497[2]=v498
+			elseif v498:IsA('Humanoid') then v497[3]=v498 end
+		end)
+		v497[6]=v496.DescendantRemoving:Connect(function(v498)
+			if v497[2]==v498 then v497[2]=nil end
+			if v497[3]==v498 then v497[3]=nil end
 		end)
 	end
-	for _,v482 in ipairs(v1:GetPlayers()) do if v482~=v7 then v481(v482) end end
-	v5[#v5+1]=v1.PlayerAdded:Connect(function(v482) if v482~=v7 and v479 then v481(v482) end end)
-	v5[#v5+1]=v1.PlayerRemoving:Connect(function(v482)
-		local v483=v479 and v479[v482]
-		if v483 then
-			if v483[2] then pcall(function()v483[2]:Disconnect()end) end
-			if v483[3] then for v484,v485 in pairs(v483[3]) do if v484 and v484.Parent then v484.Transparency=v485 end end v483[3]=nil end
-			if v483[1] then pcall(function()v483[1]:Destroy()end) end
-			v479[v482]=nil
+	local function v498(v499)
+		if v499==v7 then return end
+		local v500={nil,nil,nil,nil,nil,nil,nil}
+		v487[v499]=v500
+		v500[4]=v499.CharacterAdded:Connect(function(v501)v494(v499,v501)end)
+		if v499.Character then v494(v499,v499.Character) end
+	end
+	for _,v499 in ipairs(v1:GetPlayers()) do v498(v499) end
+	v488=v1.PlayerAdded:Connect(v498)
+	v489=v1.PlayerRemoving:Connect(function(v499)
+		local v500=v487[v499]
+		if not v500 then return end
+		for v501=4,6 do if v500[v501] then pcall(function()v500[v501]:Disconnect()end) end end
+		if v500[1] then pcall(function()v500[1]:Destroy()end) end
+		v487[v499]=nil
+	end)
+	v486=v4.RenderStepped:Connect(function()
+		if v6 or not v487 then return end
+		for v499,v500 in pairs(v487) do
+			local v501,v502=v500[2],v500[3]
+			if not v501 or not v501.Parent or not v502 or not v502.Parent then
+				if v500[1] then v500[1].Enabled=false end
+				continue
+			end
+			local v503,v504=v500[1],v500[7]
+			if not v503 or not v503.Parent or v503.Adornee~=v501 or not v504 or not v504.Parent then
+				if v503 then pcall(function()v503:Destroy()end) end
+				v503=Instance.new('BillboardGui')
+				v503.Adornee=v501
+				v503.Parent=v501
+				v503.AlwaysOnTop=true
+				v503.Size=UDim2.new(0,160,0,30)
+				v503.StudsOffsetWorldSpace=Vector3.new(0,4)
+				v504=Instance.new('TextLabel',v503)
+				v504.Size=UDim2.new(1,0,1)
+				v504.BackgroundTransparency=1
+				v504.Font=Enum.Font.Code
+				v504.TextSize=22
+				v504.TextXAlignment=Enum.TextXAlignment.Center
+				v504.TextYAlignment=Enum.TextYAlignment.Center
+				v504.Text=v499.Name
+				v500[1],v500[7]=v503,v504
+			end
+			v503.Enabled=true
+			v504.TextColor3=v439(v499)
 		end
 	end)
-	v480=v4.RenderStepped:Connect(function()
-		if v6 or not v479 then return end
-		for v482,v483 in pairs(v479) do
-			local v484=v482.Character
-			if not v484 then
-				if v483[3] then for v484,v485 in pairs(v483[3]) do if v484 and v484.Parent then v484.Transparency=v485 end end v483[3]=nil end
-				if v483[1] then v483[1]:Destroy() v483[1]=nil end
-			else
-				local v485,v486=nil,nil
-				for _,v487 in ipairs(v484:GetChildren()) do
-					if v487.Name=='HumanoidRootPart' then v485=v487
-					elseif v487:IsA('Humanoid') then v486=v487 end
+	v5[#v5+1]=v486
+	v5[#v5+1]=v488
+	v5[#v5+1]=v489
+end)
+
+local v505,v506,v507,v508=nil,nil,nil,nil
+local v509,v510,v511=CreateToggle(v433(),'Highlight',nil,function(v512)
+	if v506 then v506:Disconnect()v506=nil end
+	if v507 then v507:Disconnect()v507=nil end
+	if v508 then v508:Disconnect()v508=nil end
+	if v505 then
+		for v513,v514 in pairs(v505) do
+			for v515=2,5 do if v514[v515] then pcall(function()v514[v515]:Disconnect()end) end end
+			if v514[6] then
+				for v515,v516 in pairs(v514[6]) do if v515 and v515.Parent then v515.Transparency=v516 end end
+			end
+			if v514[1] then pcall(function()v514[1]:Destroy()end) end
+			v505[v513]=nil
+		end
+	end
+	v505=nil
+	if not v512 then return end
+	v505={}
+	local function v513(v514)
+		local v515=v505[v514]
+		if not v515 then return end
+		if v515[3] then pcall(function()v515[3]:Disconnect()end)v515[3]=nil end
+		if v515[4] then pcall(function()v515[4]:Disconnect()end)v515[4]=nil end
+		if v515[5] then pcall(function()v515[5]:Disconnect()end)v515[5]=nil end
+		if v515[6] then
+			for v516,v517 in pairs(v515[6]) do if v516 and v516.Parent then v516.Transparency=v517 end end
+		end
+		if v515[1] then pcall(function()v515[1]:Destroy()end)v515[1]=nil end
+		v515[6]={}
+		v515[7]=nil
+		v515[8]=nil
+		local v516=v514.Character
+		if not v516 then return end
+		for _,v517 in ipairs(v516:GetDescendants()) do
+			if v517.Name=='HumanoidRootPart' and v517:IsA('BasePart') then v515[7]=v517 end
+			if v517:IsA('Humanoid') then v515[8]=v517 end
+			if v517:IsA('BasePart') and v517.Transparency==1 then
+				v515[6][v517]=1
+				v517.Transparency=.99
+			end
+		end
+		local function v517()
+			if not v515[7] or not v515[7].Parent or not v515[8] or not v515[8].Parent then
+				if v515[1] then v515[1].Enabled=false end
+				return
+			end
+			if not v515[1] or not v515[1].Parent then
+				local v518=Instance.new('Highlight')
+				v518.Parent=workspace
+				v518.Adornee=v516
+				v518.FillTransparency=.5
+				v518.OutlineTransparency=1
+				v515[1]=v518
+			end
+			v515[1].Enabled=true
+			v515[1].Adornee=v516
+			v515[1].FillColor=v439(v514)
+		end
+		v515[3]=v516.DescendantAdded:Connect(function(v518)
+			if v518.Name=='HumanoidRootPart' and v518:IsA('BasePart') then v515[7]=v518 end
+			if v518:IsA('Humanoid') then v515[8]=v518 end
+			if v518:IsA('BasePart') and v518.Transparency==1 then
+				v515[6][v518]=1
+				v518.Transparency=.99
+			end
+			v517()
+		end)
+		v515[4]=v516.DescendantRemoving:Connect(function(v518)
+			if v515[7]==v518 then v515[7]=nil end
+			if v515[8]==v518 then v515[8]=nil end
+			v515[6][v518]=nil
+			v517()
+		end)
+		v517()
+	end
+	local function v518(v519)
+		if v519==v7 then return end
+		v505[v519]={nil,nil,nil,nil,nil,{},nil,nil}
+		v505[v519][2]=v519.CharacterAdded:Connect(function()v513(v519)end)
+		v513(v519)
+	end
+	for _,v519 in ipairs(v1:GetPlayers()) do v518(v519) end
+	v507=v1.PlayerAdded:Connect(v518)
+	v508=v1.PlayerRemoving:Connect(function(v519)
+		local v520=v505[v519]
+		if not v520 then return end
+		for v521=2,5 do if v520[v521] then pcall(function()v520[v521]:Disconnect()end) end end
+		if v520[6] then for v521,v522 in pairs(v520[6]) do if v521 and v521.Parent then v521.Transparency=v522 end end end
+		if v520[1] then pcall(function()v520[1]:Destroy()end) end
+		v505[v519]=nil
+	end)
+	v506=v4.RenderStepped:Connect(function()
+		if v6 or not v505 then return end
+		for v519,v520 in pairs(v505) do
+			local v521=v520[1]
+			if v521 and v521.Parent and v520[7] and v520[7].Parent and v520[8] and v520[8].Parent then
+				v521.FillColor=v439(v519)
+			elseif v520[7] and v520[7].Parent and v520[8] and v520[8].Parent then
+				local v522=v519.Character
+				if v522 then
+					v521=Instance.new('Highlight')
+					v521.Parent=workspace
+					v521.Adornee=v522
+					v521.FillTransparency=.5
+					v521.OutlineTransparency=1
+					v521.FillColor=v439(v519)
+					v520[1]=v521
 				end
-				if not v485 or not v486 then
-					if v483[1] then v483[1].Enabled=false end
-					continue
-				end
-				local v487=v483[1]
-				if (not v487) or (not v487.Parent) or v487.Adornee~=v484 then
-					if v487 then pcall(function()v487:Destroy()end) end
-					v487=Instance.new('Highlight')
-					v487.Parent=workspace
-					v483[1]=v487
-				end
-				local v488=v483[3]
-				if not v488 then v488={}v483[3]=v488 end
-				local v489={}
-				for _,v490 in ipairs(v484:GetDescendants()) do
-					if v490:IsA('BasePart') then
-						v489[v490]=true
-						if v490.Transparency==1 and v488[v490]==nil then
-							v488[v490]=1
-							v490.Transparency=.99
-						elseif v488[v490]~=nil and v490.Transparency~=.99 then
-							v488[v490]=nil
-						end
-					end
-				end
-				for v490 in pairs(v488) do
-					if (not v490.Parent) or (not v489[v490]) then v488[v490]=nil end
-				end
-				v487.Enabled=true
-				v487.Adornee=v484
-				v487.FillColor=Color3.new(1,0,0)
-				v487.FillTransparency=.8
-				v487.OutlineTransparency=1
 			end
 		end
 	end)
-	v5[#v5+1]=v480
+	v5[#v5+1]=v506
+	v5[#v5+1]=v507
+	v5[#v5+1]=v508
 end)
-local v479,v480=nil,nil
+
+local v523,v524,v525=CreateSelect(v433(),'Color Type',v434,{'Custom','Team Color','Rainbow'},function(v526)
+	v434=v526
+	if v438 then v438.Visible=v434=='Custom' end
+end)
+local v526,v527,v528,v529=Create3Input(v433(),'RGB',function(v530,v531,v532)
+	v435,v436,v437=v530,v531,v532
+end,'255','0','0')
+v438=v526
+v438.Visible=true
 
 local function v334(v335)
 	return tostring(math.floor(v335*100+0.5)/100)
