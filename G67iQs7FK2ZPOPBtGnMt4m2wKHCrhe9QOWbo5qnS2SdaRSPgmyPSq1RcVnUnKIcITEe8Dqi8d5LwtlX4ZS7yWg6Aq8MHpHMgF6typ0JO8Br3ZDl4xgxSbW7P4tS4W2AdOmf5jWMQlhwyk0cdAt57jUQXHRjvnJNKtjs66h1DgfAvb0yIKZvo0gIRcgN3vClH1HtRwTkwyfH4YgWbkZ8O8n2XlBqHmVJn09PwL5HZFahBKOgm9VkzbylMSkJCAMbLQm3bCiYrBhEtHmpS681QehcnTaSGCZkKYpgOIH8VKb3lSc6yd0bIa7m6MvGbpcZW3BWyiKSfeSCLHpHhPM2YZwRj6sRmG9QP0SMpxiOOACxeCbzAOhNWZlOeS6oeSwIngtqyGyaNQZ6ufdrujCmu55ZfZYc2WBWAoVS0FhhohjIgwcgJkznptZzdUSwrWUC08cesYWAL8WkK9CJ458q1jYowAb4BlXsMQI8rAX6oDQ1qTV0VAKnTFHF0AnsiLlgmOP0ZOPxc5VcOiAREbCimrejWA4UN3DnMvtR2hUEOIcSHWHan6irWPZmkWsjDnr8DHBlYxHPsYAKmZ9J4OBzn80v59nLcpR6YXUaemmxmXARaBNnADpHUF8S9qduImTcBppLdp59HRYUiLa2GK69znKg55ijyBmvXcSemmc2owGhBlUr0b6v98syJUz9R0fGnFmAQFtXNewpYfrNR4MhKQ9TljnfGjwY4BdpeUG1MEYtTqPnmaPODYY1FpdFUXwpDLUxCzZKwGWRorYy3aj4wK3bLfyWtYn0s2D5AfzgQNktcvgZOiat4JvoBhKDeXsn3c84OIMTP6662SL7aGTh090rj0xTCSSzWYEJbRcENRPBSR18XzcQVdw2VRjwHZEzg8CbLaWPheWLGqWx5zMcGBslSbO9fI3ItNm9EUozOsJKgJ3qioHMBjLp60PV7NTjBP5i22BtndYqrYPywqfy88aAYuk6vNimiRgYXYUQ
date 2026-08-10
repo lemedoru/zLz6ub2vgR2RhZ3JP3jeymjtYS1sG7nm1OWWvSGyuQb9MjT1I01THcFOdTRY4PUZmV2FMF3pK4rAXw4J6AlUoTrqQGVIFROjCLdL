@@ -2423,8 +2423,12 @@ local v442,v443,v444=CreateToggle(v433(),'Box ESP',nil,function(v445)
 						end
 					end
 				end
-				local v460=v702(v454)
-				if v459 and v460 then
+				local v460,v461=nil,nil
+				for _,v462 in ipairs(v454:GetChildren()) do
+					if v462.Name=='HumanoidRootPart' then v460=v462
+					elseif v462:IsA('Humanoid') then v461=v462 end
+				end
+				if v459 and v460 and v461 then
 					v452.BackgroundColor3=v451.TeamColor.Color
 					v452.Position=UDim2.fromOffset(v455,v456)
 					v452.Size=UDim2.fromOffset(v457-v455,v458-v456)
@@ -2486,54 +2490,62 @@ local v460,v461,v462=CreateToggle(v433(),'Mini ESP',nil,function(v463)
 				end
 					v466[2]=v468
 				end
-				local v470,v471,v472=v466[1],v466[3],v466[5]
-				if v468 then
-					if not v470 or not v470.Parent or v470.Parent~=v468 or v470.Adornee~=v468 or not v471 or not v471.Parent or not v472 or not v472.Parent then
-						if v470 then v470:Destroy() end
-						local v473=Instance.new('BillboardGui')
-						v473.Adornee=v468
-						v473.Parent=v468
-						v473.AlwaysOnTop=true
-						v473.Size=UDim2.new(0,160,0,30)
-						v473.StudsOffsetWorldSpace=Vector3.new(0,4)
-						local v474=Instance.new('TextLabel')
-						v474.Parent=v473
-						v474.Size=UDim2.new(1,0,1)
-						v474.BackgroundTransparency=1
-						v474.Font=Enum.Font.Code
-						v474.TextColor3=Color3.new(1,1,1)
-						v474.TextSize=22
-						v474.TextXAlignment=Enum.TextXAlignment.Center
-						v474.TextYAlignment=Enum.TextYAlignment.Center
-						local v475=Instance.new('UIStroke')
-						v475.Parent=v474
-						v475.Thickness=1
-						v475.Color=Color3.new(0,0,0)
-						v466[1],v466[3],v466[5]=v473,v474,v475
-						v470,v471,v472=v473,v474,v475
+				local v470,v471=nil,nil
+				for _,v472 in ipairs(v467:GetChildren()) do
+					if v472.Name=='HumanoidRootPart' then v470=v472
+					elseif v472:IsA('Humanoid') then v471=v472 end
+				end
+				local v472,v473,v474=v466[1],v466[3],v466[5]
+				if v468 and v470 and v471 then
+					if not v472 or not v472.Parent or v472.Parent~=v468 or v472.Adornee~=v468 or not v473 or not v473.Parent or not v474 or not v474.Parent then
+						if v472 then v472:Destroy() end
+						local v475=Instance.new('BillboardGui')
+						v475.Adornee=v468
+						v475.Parent=v468
+						v475.AlwaysOnTop=true
+						v475.Size=UDim2.new(0,160,0,30)
+						v475.StudsOffsetWorldSpace=Vector3.new(0,4)
+						local v476=Instance.new('TextLabel')
+						v476.Parent=v475
+						v476.Size=UDim2.new(1,0,1)
+						v476.BackgroundTransparency=1
+						v476.Font=Enum.Font.Code
+						v476.TextColor3=Color3.new(1,1,1)
+						v476.TextSize=22
+						v476.TextXAlignment=Enum.TextXAlignment.Center
+						v476.TextYAlignment=Enum.TextYAlignment.Center
+						local v477=Instance.new('UIStroke')
+						v477.Parent=v476
+						v477.Thickness=1
+						v477.Color=Color3.new(0,0,0)
+						v466[1],v466[3],v466[5]=v475,v476,v477
+						v472,v473,v474=v475,v476,v477
 					end
-					v470.Adornee=v468
-					v470.Parent=v468
-					v470.AlwaysOnTop=true
-					v470.Size=UDim2.new(0,160,0,30)
-					v470.StudsOffsetWorldSpace=Vector3.new(0,4)
-					v471.Size=UDim2.new(1,0,1)
-					v471.BackgroundTransparency=1
-					v471.Font=Enum.Font.Code
+					v472.Enabled=true
+					v472.Adornee=v468
+					v472.Parent=v468
+					v472.AlwaysOnTop=true
+					v472.Size=UDim2.new(0,160,0,30)
+					v472.StudsOffsetWorldSpace=Vector3.new(0,4)
+					v473.Size=UDim2.new(1,0,1)
+					v473.BackgroundTransparency=1
+					v473.Font=Enum.Font.Code
 					local v476a=v465.TeamColor
-					v471.TextColor3=v476a and v476a.Color or Color3.new(1,1,1)
-					v471.TextSize=22
-					v471.TextXAlignment=Enum.TextXAlignment.Center
-					v471.TextYAlignment=Enum.TextYAlignment.Center
-					v471.Text=v465.Name
-					if not v472 or not v472.Parent or v472.Parent~=v471 then
-						v472=nil
-						for _,v473 in ipairs(v471:GetChildren()) do if v473.ClassName=='UIStroke' then v472=v473 break end end
-						if not v472 then v472=Instance.new('UIStroke') v472.Parent=v471 end
-						v466[5]=v472
+					v473.TextColor3=v476a and v476a.Color or Color3.new(1,1,1)
+					v473.TextSize=22
+					v473.TextXAlignment=Enum.TextXAlignment.Center
+					v473.TextYAlignment=Enum.TextYAlignment.Center
+					v473.Text=v465.Name
+					if not v474 or not v474.Parent or v474.Parent~=v473 then
+						v474=nil
+						for _,v475 in ipairs(v473:GetChildren()) do if v475.ClassName=='UIStroke' then v474=v475 break end end
+						if not v474 then v474=Instance.new('UIStroke') v474.Parent=v473 end
+						v466[5]=v474
 					end
-					v472.Thickness=1
-					v472.Color=Color3.new(0,0,0)
+					v474.Thickness=1
+					v474.Color=Color3.new(0,0,0)
+				else
+					if v472 then v472.Enabled=false end
 				end
 			end
 		end
@@ -2587,34 +2599,44 @@ local v476,v477,v478=CreateToggle(v433(),'HighLight',nil,function(v479a)
 				if v483[3] then for v484,v485 in pairs(v483[3]) do if v484 and v484.Parent then v484.Transparency=v485 end end v483[3]=nil end
 				if v483[1] then v483[1]:Destroy() v483[1]=nil end
 			else
-				local v485=v483[1]
-				if (not v485) or (not v485.Parent) or v485.Adornee~=v484 then
-					if v485 then pcall(function()v485:Destroy()end) end
-					v485=Instance.new('Highlight')
-					v485.Parent=workspace
-					v483[1]=v485
+				local v485,v486=nil,nil
+				for _,v487 in ipairs(v484:GetChildren()) do
+					if v487.Name=='HumanoidRootPart' then v485=v487
+					elseif v487:IsA('Humanoid') then v486=v487 end
 				end
-				local v486=v483[3]
-				if not v486 then v486={}v483[3]=v486 end
-				local v487={}
-				for _,v488 in ipairs(v484:GetDescendants()) do
-					if v488:IsA('BasePart') then
-						v487[v488]=true
-						if v488.Transparency==1 and v486[v488]==nil then
-							v486[v488]=1
-							v488.Transparency=.99
-						elseif v486[v488]~=nil and v488.Transparency~=.99 then
-							v486[v488]=nil
+				if not v485 or not v486 then
+					if v483[1] then v483[1].Enabled=false end
+					continue
+				end
+				local v487=v483[1]
+				if (not v487) or (not v487.Parent) or v487.Adornee~=v484 then
+					if v487 then pcall(function()v487:Destroy()end) end
+					v487=Instance.new('Highlight')
+					v487.Parent=workspace
+					v483[1]=v487
+				end
+				local v488=v483[3]
+				if not v488 then v488={}v483[3]=v488 end
+				local v489={}
+				for _,v490 in ipairs(v484:GetDescendants()) do
+					if v490:IsA('BasePart') then
+						v489[v490]=true
+						if v490.Transparency==1 and v488[v490]==nil then
+							v488[v490]=1
+							v490.Transparency=.99
+						elseif v488[v490]~=nil and v490.Transparency~=.99 then
+							v488[v490]=nil
 						end
 					end
 				end
-				for v488 in pairs(v486) do
-					if (not v488.Parent) or (not v487[v488]) then v486[v488]=nil end
+				for v490 in pairs(v488) do
+					if (not v490.Parent) or (not v489[v490]) then v488[v490]=nil end
 				end
-				v485.Adornee=v484
-				v485.FillColor=Color3.new(1,0,0)
-				v485.FillTransparency=.8
-				v485.OutlineTransparency=1
+				v487.Enabled=true
+				v487.Adornee=v484
+				v487.FillColor=Color3.new(1,0,0)
+				v487.FillTransparency=.8
+				v487.OutlineTransparency=1
 			end
 		end
 	end)
