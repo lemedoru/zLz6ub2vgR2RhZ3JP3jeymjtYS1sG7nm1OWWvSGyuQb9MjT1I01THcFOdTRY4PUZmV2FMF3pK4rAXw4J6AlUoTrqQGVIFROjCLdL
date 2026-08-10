@@ -173,7 +173,7 @@ v15={
 	['Teleport']='テレポート',
 	['Script']='スクリプト',['Load IY']='IYを実行',['Load RSpy']='RSpyを実行',['Load Dex']='Dexを実行',['Load ShiftLock']='シフトロックを実行',['Unload']='LemeGUIを消す',['Language']='言語',
 	['Config']='設定',['Name']='名前',['Create Config']='設定を作成',['Load Config']='設定を反映',['OverWrite Config']='設定を上書き',['Delete Config']='設定を削除',['Set AutoLoad']='オートロードに設定',
-	['ESP']='ESP',['Box ESP']='ボックスESP',['Mini ESP']='ミニESP',['HighLight']='ハイライト',['Spectate']='観戦',['Shader']='シェーダー',['Mini Shader']='ミニシェーダー',
+	['ESP']='ESP',['Color Type']='色のタイプ',['Custom']='カスタム',['Team Color']='チームの色',['Rainbow']='虹色',['Box ESP']='箱型ESP',['Mini ESP']='ミニESP',['Highlight']='ハイライト',['Spectate']='観戦',['Shader']='シェーダー',['Mini Shader']='ミニシェーダー',
 	['ON']='オン',['OFF']='オフ',['NONE']='なし'
 }
 local v710,v711,v712,v713,v714,v715=false,0,0,nil,'',nil
@@ -419,7 +419,7 @@ local function CreateKeybind(v54,v55,v56)
 end
 
 local function CreateSelect(v61,v62,v63,v64,v65)
-	local v66,v67=CreateButton(v61,v62..': '..tostring(v63)),false
+	local v66,v67=CreateButton(v61,v19(v62)..': '..v19(tostring(v63))),false
 	local v68
 	local function v69()
 		if v68 then pcall(function()v68:Destroy()end)v68=nil end
@@ -497,13 +497,13 @@ local function CreateSelect(v61,v62,v63,v64,v65)
 			v79.Font=Enum.Font.Code
 			v79.TextColor3=Color3.new(1,1,1)
 			v79.TextSize=15
-			v79.Text=tostring(v78)
+			v79.Text=v19(tostring(v78))
 			v79.ZIndex=2147483647
 			CreateCorner(v79,5)
 			CreateStroke(v79)
 			v79.MouseButton1Click:Connect(function()
 				v63=v78
-				v66.Text=v19(v62)..': '..tostring(v63)
+				v66.Text=v19(v62)..': '..v19(tostring(v63))
 				if v65 then v65(v63) end
 				v23()
 				v21()
@@ -515,11 +515,11 @@ local function CreateSelect(v61,v62,v63,v64,v65)
 	local function v71(v72)
 		v63=v72
 		if v65 then v65(v63) end
-		v66.Text=v19(v62)..': '..tostring(v63)
+		v66.Text=v19(v62)..': '..v19(tostring(v63))
 		v23()
 		v21()
 	end
-	v20(v66,function()v66.Text=v19(v62)..': '..tostring(v63)end)
+	v20(v66,function()v66.Text=v19(v62)..': '..v19(tostring(v63))end)
 	v28('Select',v62,function()return tostring(v63) end,v71)
 	return v66,function()return v63 end,v71
 end
