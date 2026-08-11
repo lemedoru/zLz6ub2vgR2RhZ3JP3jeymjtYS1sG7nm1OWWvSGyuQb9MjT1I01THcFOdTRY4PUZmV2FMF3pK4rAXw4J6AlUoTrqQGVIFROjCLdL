@@ -2843,6 +2843,154 @@ end,'255','0','0')
 v438=v526
 v438.Visible=true
 
+do
+local v9101,v9102=CreateGroup(v105,'Tracer')
+local v9103=0
+local function v9104()v9103=v9103+1 return v9103%2==1 and v9101 or v9102 end
+local v9105=5
+local v9106,v9107,v9108,v9109,v9110,v9111=nil,nil,nil,nil,nil,nil
+local v9111,v9112,v9113=CreateToggle(v9104(),'Tracer',nil,function(v9114)
+	if v9107 then v9107:Disconnect()v9107=nil end
+	if v9109 then v9109:Disconnect()v9109=nil end
+	if v9110 then v9110:Disconnect()v9110=nil end
+	if v9108 then
+		for v9115,v9116 in pairs(v9108) do
+			for v9117=1,#v9116 do
+				if v9116[v9117] then pcall(function()v9116[v9117]:Disconnect()end) end
+			end
+			v9108[v9115]=nil
+		end
+	end
+	if v9106 then
+		for _,v9115 in pairs(v9106) do
+			if v9115[1] then pcall(function()v9115[1]:Destroy()end) end
+		end
+	end
+	if v9111 then pcall(function()v9111:Destroy()end)v9111=nil end
+	v9106=nil
+	v9108=nil
+	if not v9114 then return end
+	v9111=Instance.new('ScreenGui',v8)
+	v9111.IgnoreGuiInset=true
+	v9111.ResetOnSpawn=false
+	v9111.DisplayOrder=2147483647
+	v9106={}
+	v9108={}
+	local function v9115(v9116,v9117)
+		local v9118=v9108[v9116]
+		if not v9118 then v9118={}v9108[v9116]=v9118 end
+		if v9118[1] then pcall(function()v9118[1]:Disconnect()end)v9118[1]=nil end
+		if v9118[2] then pcall(function()v9118[2]:Disconnect()end)v9118[2]=nil end
+		local v9119=v9106[v9116]
+		if not v9119 then return end
+		v9119[2],v9119[3],v9119[4]=v9117,nil,nil
+		v9119[1].Visible=false
+		if not v9117 then return end
+		for _,v9120 in ipairs(v9117:GetDescendants()) do
+			if v9120.Name=='HumanoidRootPart' and v9120:IsA('BasePart') then
+				v9119[3]=v9120
+			elseif v9120:IsA('Humanoid') then
+				v9119[4]=v9120
+			end
+		end
+		v9118[1]=v9117.DescendantAdded:Connect(function(v9120)
+			if v9119[2]~=v9117 then return end
+			if v9120.Name=='HumanoidRootPart' and v9120:IsA('BasePart') then
+				v9119[3]=v9120
+			elseif v9120:IsA('Humanoid') then
+				v9119[4]=v9120
+			end
+		end)
+		v9118[2]=v9117.DescendantRemoving:Connect(function(v9120)
+			if v9119[2]~=v9117 then return end
+			if v9119[3]==v9120 then v9119[3]=nil end
+			if v9119[4]==v9120 then v9119[4]=nil end
+		end)
+	end
+	local function v9120(v9121)
+		if v9121==v7 then return end
+		local v9122=Instance.new('Frame',v9111)
+		v9122.AnchorPoint=Vector2.new(.5,.5)
+		v9122.BorderSizePixel=0
+		v9122.BackgroundTransparency=.5
+		v9122.Visible=false
+		v9122.ZIndex=2147483647
+		v9106[v9121]={v9122,nil,nil,nil}
+		v9108[v9121]={}
+		v9108[v9121][3]=v9121.CharacterAdded:Connect(function(v9123)v9115(v9121,v9123)end)
+		if v9121.Character then v9115(v9121,v9121.Character) end
+	end
+	for _,v9121 in ipairs(v1:GetPlayers()) do v9120(v9121) end
+	v9109=v1.PlayerAdded:Connect(v9120)
+	v9110=v1.PlayerRemoving:Connect(function(v9121)
+		local v9122=v9108[v9121]
+		if v9122 then
+			for v9123=1,#v9122 do
+				if v9122[v9123] then pcall(function()v9122[v9123]:Disconnect()end) end
+			end
+			v9108[v9121]=nil
+		end
+		if v9106[v9121] then
+			if v9106[v9121][1] then v9106[v9121][1]:Destroy()end
+			v9106[v9121]=nil
+		end
+	end)
+	v9107=v4.RenderStepped:Connect(function()
+		if v6 or not v9106 or not v9111 or not v9111.Parent then return end
+		local v9120=workspace.CurrentCamera
+		if not v9120 then return end
+		local v9121=v9120.ViewportSize/2
+		for v9122,v9123 in pairs(v9106) do
+			local v9124,v9125,v9126,v9127=v9123[1],v9123[2],v9123[3],v9123[4]
+			if not v9125 or not v9125.Parent or not v9126 or not v9126.Parent or not v9127 or not v9127.Parent or v9127.Health<=0 then
+				v9124.Visible=false
+				continue
+			end
+			local v9128,v9129=v9120:WorldToViewportPoint(v9126.Position)
+			local v9130
+			if v9128.Z>0 then
+				local v9131=Vector2.new(v9128.X,v9128.Y)-v9121
+				if v9129 then
+					v9130=v9131
+				else
+					if v9131.Magnitude==0 then v9131=Vector2.new(0,-1) end
+					v9131=v9131.Unit
+					local v9132=math.min(
+						v9131.X~=0 and math.abs(v9121.X/v9131.X) or math.huge,
+						v9131.Y~=0 and math.abs(v9121.Y/v9131.Y) or math.huge
+					)
+					v9130=v9131*v9132
+				end
+			else
+				local v9131=v9120.CFrame:PointToObjectSpace(v9126.Position)
+				local v9132=Vector2.new(v9131.X,-v9131.Y)
+				if v9132.Magnitude==0 then v9132=Vector2.new(0,-1) end
+				v9132=v9132.Unit
+				local v9133=math.min(
+					v9132.X~=0 and math.abs(v9121.X/v9132.X) or math.huge,
+					v9132.Y~=0 and math.abs(v9121.Y/v9132.Y) or math.huge
+				)
+				v9130=v9132*v9133
+			end
+			local v9131=v9130.Magnitude
+			v9124.BackgroundColor3=v439(v9122)
+			v9124.Position=UDim2.fromOffset(v9121.X+v9130.X/2,v9121.Y+v9130.Y/2)
+			v9124.Size=UDim2.fromOffset(v9131,v9105)
+			v9124.Rotation=math.deg(math.atan2(v9130.Y,v9130.X))
+			v9124.Visible=true
+		end
+	end)
+	v5[#v5+1]=v9107
+	v5[#v5+1]=v9109
+	v5[#v5+1]=v9110
+end)
+CreateInput(v9104(),'Width',function(v9114)
+	local v9115=tonumber(v9114)
+	if v9115 then v9105=math.max(0,v9115) end
+end,nil,'5')
+end
+
+
 local function v334(v335)
 	return tostring(math.floor(v335*100+0.5)/100)
 end
